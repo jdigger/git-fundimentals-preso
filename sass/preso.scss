@@ -1,0 +1,603 @@
+$node-size: 90px;
+
+@mixin -transparent-border($side, $width) {
+    border-#{$side}-width: $width;
+    border-#{$side}-style: solid;
+    border-#{$side}-color: transparent;
+}
+
+@mixin -solid-border($side, $width) {
+    border-#{$side}-width: $width;
+    border-#{$side}-style: solid;
+}
+
+@mixin arrow($direction, $full, $width) {
+    display: inline-block;
+    position: relative;
+    right: -$width;
+
+    @if $direction == right {
+        @if $full == true {
+            @include -transparent-border(top, $width);
+        }
+        @include -solid-border(left, $width);
+        @include -transparent-border(bottom, $width);
+    }
+    @else if $direction == left {
+        @if $full == true {
+            @include -transparent-border(top, $width);
+        }
+        @include -solid-border(right, $width);
+        @include -transparent-border(bottom, $width);
+    }
+    @else if $direction == down {
+        @if $full == true {
+            @include -transparent-border(left, $width);
+        }
+        @include -solid-border(top, $width);
+        @include -transparent-border(right, $width);
+        @include -transparent-border(bottom, $width);
+    }
+    @else if $direction == up {
+        @if $full == true {
+            @include -transparent-border(left, $width);
+        }
+        @include -solid-border(bottom, $width);
+        @include -transparent-border(right, $width);
+        @include -transparent-border(top, $width);
+    }
+    @else {
+        @warn "Unknown direction: #{$direction}"
+    }
+}
+
+div.code.note {
+    background-color: #ddeeee;
+    box-shadow: 0 0 6px black;
+    color: black;
+    text-align: left;
+    font-family: monospace;
+    font-size: 100%;
+    line-height: 1.2em;
+}
+
+p.note {
+    box-shadow: 0 0 6px black;
+    font-size: 100%;
+    line-height: 1.2em;
+}
+
+div.note {
+    box-shadow: 0 0 6px black;
+    font-size: 100%;
+    line-height: 1.2em;
+    padding: 10px;
+
+    p {
+        text-align: left;
+    }
+}
+
+.reveal .slides img.git-logo {
+    border: none;
+    box-shadow: none;
+    width: 300px;
+}
+
+%bash {
+    font-family: monospace;
+    white-space: pre;
+    text-align: left;
+    color: white;
+    background-color: black;
+    line-height: 1.2em;
+}
+
+div.bash {
+    @extend %bash;
+    overflow: auto;
+    color: white;
+    font-size: 60%;
+    max-height: 600px;
+    width: 100%;
+    padding: 10px;
+
+    .comment {
+        color: cyan;
+    }
+}
+
+$bash-command-color: lightgreen;
+span.bash {
+    @extend %bash;
+    color: $bash-command-color;
+}
+
+
+$bash-comment-color: yellow;
+span.bash-comment {
+    color: $bash-comment-color;
+}
+
+
+div.plumbing {
+    div {
+        display: inline-block;
+    }
+    img {
+        height: 100%; 
+    }
+}
+
+
+section.constant-time {
+    svg {
+        zoom: 0.7;
+    }
+}
+
+
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+%node {
+    @include border-radius($node-size);
+    background: yellow;
+    border: 2px solid white;
+    box-shadow: 0 0 5px grey;
+    position: absolute;
+    width: $node-size;
+    height: $node-size;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    -webkit-backface-visibility: hidden;
+
+    .label {
+        color: darkgreen;
+        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        width: $node-size;
+        left: -1px;
+        top: $node-size / 4;
+        bottom: $node-size / 4;
+        font-size: $node-size / 2;
+    }
+}
+
+@mixin transform-origin() {
+    -webkit-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+@mixin rotate($angle) {
+    transform: rotate($angle);
+    -webkit-transform: rotate($angle);
+    -moz-transform: rotate($angle);
+    -ms-transform: rotate($angle);
+}
+
+@function strip-unit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+@function exponent($base, $exponent) {
+  // reset value
+  $value: strip-unit($base);
+  // positive intergers get multiplied
+  @if $exponent > 1 {
+    @for $i from 2 through $exponent {
+      $value: $value * $base; } }
+  // negitive intergers get divided. A number divided by itself is 1
+  @if $exponent < 1 {
+    @for $i from 0 through -$exponent {
+      $value: $value / $base; } }
+  // return the last value written
+  @return $value; 
+}
+
+@function pow($base, $exponent) {
+  @return exponent($base, $exponent);
+}
+
+@function sqrt($number) {
+  $guess: 4;
+  $root: $guess;
+  @for $i from 1 through 50 {
+    $pow: pow($root, 2);
+    $root: $root - ($pow - $number) / (2 * $root);
+  }
+  @return $root;
+}
+
+$arrow-size: 10px;
+
+@mixin segment($direction, $row, $col) {
+    $adj: $arrow-size / 2;
+    position: absolute;
+    background: black;
+    z-index: 1;
+    @include transform-origin();
+    border: 1px solid white;
+    border-right: 0;
+    -webkit-backface-visibility: hidden;
+    width: $node-size - ($arrow-size * 2);
+    height: 5px;
+    text-align: right;
+
+    @if $direction == down {
+        @include rotate(90deg);
+        top: ($node-size - $adj) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else if $direction == up {
+        @include rotate(270deg);
+        top: ($node-size - 5px) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else if $direction == left {
+        @include rotate(180deg);
+        top: ($node-size - 5px) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else if $direction == right {
+        @include rotate(0deg);
+        top: ($node-size - 5px) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else if $direction == downright {
+        @include rotate(60deg);
+        width: sqrt(2 * pow(($node-size - ($arrow-size * 2)), 2));  // hypotenuse
+        top: ($node-size - $adj) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else if $direction == downleft {
+        @include rotate(120deg);
+        width: sqrt(2 * pow(($node-size - ($arrow-size * 2)), 2));  // hypotenuse
+        top: ($node-size - $adj) + ($node-size * $row);
+        left: ($node-size / 2) + ($node-size * $col);
+
+        .endpoint {
+            @include arrow(right, true, $arrow-size);
+            top: -($node-size / 4);
+        }
+    }
+    @else {
+        @warn "Unknown direction: #{$direction}"
+    }
+}
+
+
+%commits {
+    div.container {
+        position: relative;
+        width: 100%;
+    }
+    h2 {
+        padding-bottom: 10px;
+    }
+    div.graph {
+        left: 650px;
+        width: 100%;
+        position: relative;
+
+        @mixin label {
+            display: block;
+            position: relative;
+            text-shadow: -2px 0 2px black, 0 2px 2px black, 2px 0 2px black, 0 -2px 2px black;
+            font-weight: bold;
+            font-size: $node-size / 2;
+            white-space: pre;
+        }
+        .tag {
+            @include label;
+            color: lightgreen;
+            &.left {
+                right: $node-size + 10px;
+                text-align: right;
+            }
+            &.right {
+                left: $node-size + 10px;
+                text-align: left;
+            }
+        }
+        .branch {
+            @include label;
+            color: lightblue;
+            &.left {
+                right: $node-size + 10px;
+                text-align: right;
+            }
+            &.right {
+                left: $node-size + 10px;
+                text-align: left;
+            }
+        }
+    }
+}
+
+.initial-commits {
+    @extend %commits;
+
+    div.graph {
+        height: 6 * $node-size;
+
+        @each $num, $row, $col in (1,0,0), (2,0,2), (3,2,0), (4,2,2), (5,4,1) {
+            .node#{$num} {
+                @extend %node;
+                top: $node-size * $row;
+                left: $node-size * $col;
+            }
+        }
+        @each $num, $direction, $row, $col in (1,down,0,0), (2,down,0,2),
+                                              (3,downright,2,0), (4,downleft,2,2),
+                                              (5,down,4,1) {
+            .segment#{$num} {
+                @include segment($direction, $row, $col);
+            }
+        }
+    }
+}
+
+@mixin branches($before_nodes, $before_segments, $after_nodes, $after_segments) {
+    @extend %commits;
+    left: -820px;
+    position: absolute;
+
+    div.bash {
+        width: auto;
+        top: 50%;
+        bottom: auto;
+        left: 33%;
+        right: auto;
+        position: absolute;
+        font-size: 40px;
+    }
+
+    div.container {
+        top: -350px;
+        left: 0px;
+        height: 8 * $node-size;
+        position: absolute;
+    }
+
+    div.graph {
+        width: 6 * $node-size;
+        position: absolute;
+    }
+
+    .graph.before {
+        left: 0px;
+        top: 2 * $node-size;
+        height: 6 * $node-size;
+
+        @each $num, $row, $col in $before_nodes {
+            .node#{$num} {
+                @extend %node;
+                top: $node-size * $row;
+                left: $node-size * $col;
+            }
+        }
+        @each $num, $direction, $row, $col in $before_segments {
+            .segment#{$num} {
+                @include segment($direction, $row, $col);
+            }
+        }
+    }
+
+    .graph.after {
+        height: 8 * $node-size;
+        left: auto;
+        right: 0px;
+
+        @each $num, $row, $col in $after_nodes {
+            .node#{$num} {
+                @extend %node;
+                top: $node-size * $row;
+                left: $node-size * $col;
+            }
+        }
+        @each $num, $direction, $row, $col in $after_segments {
+            .segment#{$num} {
+                @include segment($direction, $row, $col);
+            }
+        }
+    }
+}
+
+section.merging-branches {
+    @include branches(
+        ((1,0,1), (2,0,3), (3,2,1), (4,2,3), (5,4,2)),
+        ((1,down,0,1), (2,down,0,3), (3,downright,2,1), (4,downleft,2,3), (5,down,4,2)),
+        ((1,2,1), (2,2,3), (3,4,1), (4,4,3), (5,6,2), (6,0,2)),
+        ((1,down,2,1), (2,down,2,3), (3,downright,4,1), (4,downleft,4,3), (5,down,6,2), (6,downright,0,2), (7,downleft,0,2))
+        );
+}
+
+
+section.rebasing-branches {
+    @extend %commits;
+    left: -820px;
+    position: absolute;
+
+    div.bash {
+        width: auto;
+        top: 50%;
+        bottom: auto;
+        left: 33%;
+        right: auto;
+        position: absolute;
+        font-size: 40px;
+    }
+
+    div.container {
+        top: -350px;
+        left: 0px;
+        height: 8 * $node-size;
+        position: absolute;
+    }
+
+    div.graph {
+        width: 6 * $node-size;
+        position: absolute;
+    }
+
+    .graph.before {
+        left: 0px;
+        top: 2 * $node-size;
+        height: 6 * $node-size;
+
+        @each $num, $row, $col in (1,0,1), (2,0,3), (3,2,1), (4,2,3), (5,4,2) {
+            .node#{$num} {
+                @extend %node;
+                top: $node-size * $row;
+                left: $node-size * $col;
+            }
+        }
+        @each $num, $direction, $row, $col in (1,down,0,1), (2,down,0,3),
+                                              (3,downright,2,1), (4,downleft,2,3),
+                                              (5,down,4,2) {
+            .segment#{$num} {
+                @include segment($direction, $row, $col);
+            }
+        }
+    }
+
+    .graph.after {
+        height: 8 * $node-size;
+        left: auto;
+        right: 0px;
+
+        @each $num, $row, $col in (1,4,1), (2,4,2.5), (3,6,1), (4,6,2.5), (5,8,1), (6,2,1), (7,0,1) {
+            .node#{$num} {
+                @extend %node;
+                top: $node-size * $row;
+                left: $node-size * $col;
+            }
+        }
+        @each $num, $direction, $row, $col in (1,down,1,1), (2,down,2,1),
+                                              (3,down,4,1), (4,down,4,2.5),
+                                              (5,down,6,1), (6,down,0,1), (7,downleft,6,2.3), {
+            .segment#{$num} {
+                @include segment($direction, $row, $col);
+            }
+        }
+
+        .segment4, .segment7, div.node2, div.node4 {
+            opacity: 0.3;
+        }
+    }
+}
+
+
+p.strong {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+
+//
+// For dagre-d3
+//
+svg {
+    overflow: hidden;
+    padding: 2px;
+}
+
+.node rect, .node div {
+    stroke: #333;
+    stroke-width: 1.5px;
+    fill: #fff;
+}
+
+$node-font-size: 20px;
+.node text, .node div {
+    font-size: $node-font-size;
+}
+
+%node-label {
+    padding: ($node-font-size / 2) - 4;
+    margin: 2px;
+}
+
+.node div.blob {
+    @extend %node-label;
+    background-color: lightblue;
+}
+
+.node div.tree {
+    @extend %node-label;
+    background-color: lightgreen;
+}
+
+.node div.commit {
+    @extend %node-label;
+    background-color: yellow;
+}
+
+.node div.ref {
+    @extend %node-label;
+    background-color: white;
+}
+
+.edgeLabel div {
+    font-size: $node-font-size * 0.9;
+    white-space: pre;
+    background-color: lightgrey;
+    line-height: 1.0em;
+    padding: 4px;
+}
+
+.edgeLabel rect {
+    fill: none;
+}
+
+.edgePath {
+    stroke: #333;
+    stroke-width: 2px;
+    fill: none;
+}
+
+
+
+
+
+// To highlight a border:
+
+// border: {
+//     color: red;
+//     style: solid;
+//     width: 1px;
+// }

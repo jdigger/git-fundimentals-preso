@@ -32,7 +32,8 @@ module.exports = function(grunt) {
 		cssmin: {
 			compress: {
 				files: {
-					'css/reveal.min.css': [ 'css/reveal.css' ]
+					'css/reveal.min.css': [ 'css/reveal.css' ],
+					'css/preso.min.css': [ 'css/preso.css' ]
 				}
 			}
 		},
@@ -48,7 +49,8 @@ module.exports = function(grunt) {
 					'css/theme/sky.css': 'css/theme/source/sky.scss',
 					'css/theme/moon.css': 'css/theme/source/moon.scss',
 					'css/theme/solarized.css': 'css/theme/source/solarized.scss',
-					'css/theme/blood.css': 'css/theme/source/blood.scss'
+					'css/theme/blood.css': 'css/theme/source/blood.scss',
+					'css/preso.css': 'sass/preso.scss',
 				}
 			}
 		},
@@ -73,7 +75,7 @@ module.exports = function(grunt) {
 					unescape: false
 				}
 			},
-			files: [ 'Gruntfile.js', 'js/reveal.js' ]
+			files: [ 'Gruntfile.js', 'js/reveal.js', 'js/preso.js' ]
 		},
 
 		connect: {
@@ -86,7 +88,7 @@ module.exports = function(grunt) {
 		},
 
 		zip: {
-			'reveal-js-presentation.zip': [
+			'git-fundimentals-presentation.zip': [
 				'index.html',
 				'css/**',
 				'js/**',
@@ -98,12 +100,16 @@ module.exports = function(grunt) {
 
 		watch: {
 			main: {
-				files: [ 'Gruntfile.js', 'js/reveal.js', 'css/reveal.css' ],
+				files: [ 'Gruntfile.js', 'js/reveal.js', 'css/reveal.css', 'js/preso.js' ],
 				tasks: 'default'
 			},
 			theme: {
 				files: [ 'css/theme/source/*.scss', 'css/theme/template/*.scss' ],
 				tasks: 'themes'
+			},
+			sass: {
+				files: [ 'sass/*.scss' ],
+				tasks: ['sass', 'cssmin']
 			}
 		}
 
