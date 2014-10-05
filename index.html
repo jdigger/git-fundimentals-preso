@@ -132,17 +132,19 @@ author Git Fundimentals &lt;gitfund@git.com&gt; 1409711557 -0600
 committer Git Fundimentals &lt;gitfund@git.com&gt; 1409711557 -0600
 
 First good version</div>
-                    <p/>
-                    <div class="note">
-                        <p>The commit has these fields:</p>
-                        <ul>
-                            <li><b><u>tree</u>:</b> id of the object that contains the file tree structure</li>
-                            <li><b><u>parent(s)</u>:</b> 0..n ids to the parents of this commit. Most commits will have one parent; most merges will have two, though can have any number of parents; this is the first so it has none</li>
-                            <li><b><u>author</u>:</b> the author (name and email) with when it was initially committed</li>
-                            <li><b><u>committer</u>:</b> the committer; usually the author, but can be different for author attribution reasons</li>
-                            <li><b><u>message</u>:</b> a description of why this change was saved</li>
-                        </ul>
-                    </div>
+                </section>
+
+
+
+                <section>
+                    <h2>The commit has these fields</h2>
+                    <ul>
+                        <li><b><u>tree</u>:</b> id of the object that contains the file tree structure</li>
+                        <li><b><u>parent(s)</u>:</b> 0..n ids to the parents of this commit. Most commits will have one parent; most merges will have two, though can have any number of parents; this is the first so it has none</li>
+                        <li><b><u>author</u>:</b> the author (name and email) with when it was initially committed</li>
+                        <li><b><u>committer</u>:</b> the committer; usually the author, but can be different for author attribution reasons</li>
+                        <li><b><u>message</u>:</b> a description of why this change was saved</li>
+                    </ul>
                 </section>
 
 
@@ -171,6 +173,7 @@ Some cowbell</div>
                 <section>
                     <h2>Hashes</h2>
                     <p>Guaranteed that exactly the same content gives exactly the same hash (<a href="http://en.wikipedia.org/wiki/SHA-1">SHA-1</a>) and it's "mathematically impossible" for different content to give the same hash.</p>
+                    <p>&nbsp;</p>
                     <p>Because each object's content has a pointer to the one below, a change in a sub-object guarantees that the hash for the parent will be different.</p>
                 </section>
 
@@ -179,7 +182,7 @@ Some cowbell</div>
                 <section>
                     <h2>On the Filesystem</h2>
 
-<div class="bash">$ <span class="bash">find .git/objects -type f</span>
+<div class="bash" style="font-size: 80%; ">$ <span class="bash">find .git/objects -type f</span>
 .git/objects/05/50b757d5b412ab40416d2c7ede1313d1c38087 <span class="bash-comment"># tree - top of commit 1</span>
 .git/objects/3b/1b4ff08b048aceeb4ccb38739101ec94b8fd01 <span class="bash-comment"># commit 1 - "First good version"</span>
 .git/objects/63/ffb2bff74e9161a82b82999718f441df6a68f1 <span class="bash-comment"># blob - file2.txt</span>
@@ -234,7 +237,7 @@ $ <span class="bash">git cat-file -p 3666127</span>
                 <section>
                     <h2>Rename Files</h2>
 
-<div class="bash">$ <span class="bash">mv file2.txt wow.txt</span>
+<div class="bash" style="font-size: 70%; ">$ <span class="bash">mv file2.txt wow.txt</span>
 $ <span class="bash">mv morefiles hasfiles</span>
 $ <span class="bash">git add -A</span>
 $ <span class="bash">git commit -m "Renamed files"</span>
@@ -289,6 +292,7 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
 
                     <p>It "noticed" that we renamed the file and directory...</p>
                     <p>How, since nothing in the data-structures recorded that?</p>
+                    <p>&nbsp;</p>
                     <p><a href="http://stackoverflow.com/questions/7938582/how-does-git-detect-similar-files-for-its-rename-detection">Some of the porcelain uses rename detection</a> based on configurable sensitivity.</p>
                     <p>Because it's easily detectable at runtime, some of the porcelain, such as "git blame -M" can show how individual lines have moved around between files.</p>
                 </section>
@@ -360,9 +364,18 @@ $ <span class="bash">find .git/objects -type f</span>
                             </ul>
                         </li>
                     </ul>
-                    <p>&nbsp;</p>
+                </section>
+
+
+
+                <section>
                     <p>As <a href="http://en.wikipedia.org/wiki/Indirection">the famous aphorism goes</a>:<br/> "All problems in computer science can be solved by another level of indirection."</p>
-                    <p>Thus instead of just the working directory and the repository, there is also the "index."</p>
+                </section>
+
+
+
+                <section>
+                    <p>Thus, instead of just the working directory and the repository, there is also the "index."</p>
                 </section>
 
 
@@ -370,7 +383,7 @@ $ <span class="bash">find .git/objects -type f</span>
                 <section>
                     <h2>Lifecycle</h2>
                     <p>&nbsp;</p>
-                    <p>Working directory -&gt; Index -&gt; Tree</p>
+                    <p>Working directory -&gt; Index -&gt; Tree-&gt; Commit</p>
                 </section>
 
 
@@ -400,7 +413,7 @@ $ <span class="bash">find .git/objects -type f</span>
 
                 <section>
                     <h2>Tags</h2>
-                    <div class="bash">$ <span class="bash">git tag t</span>
+                    <div class="bash" style="font-size: 70%; ">$ <span class="bash">git tag t</span>
 $ <span class="bash">cat .git/refs/tags/t</span>
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 $ <span class="bash">git cat-file -t e001241</span>
@@ -454,8 +467,8 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section>
                     <h2>Checking Out A Branch</h2>
                     <p><span class="bash">git checkout <i>branchname</i></span></p>
-                    <p>The process:</p>
-                    <ol>
+                    <p style="font-size: 120%; ">The process:</p>
+                    <ol style="font-size: 120%; ">
                         <li>lookup the tree used by the commit pointed at by the branch</li>
                         <li>update the local filesystem to match the tree</li>
                         <li>change HEAD to point to the branch</li>
@@ -499,7 +512,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section>
                     <h2>Commit</h2>
                     <p>The process:</p>
-                    <ol style="width: 50%; ">
+                    <ol style="width: 80%; ">
                         <li>compute hashes for all blobs in the index, writing objects for "new" hashes
                             <ul><li>Yet another advantage of the index is that it minimizes the amount of work that needs to happen for the commit, since it only needs to hash blobs in the index</li></ul>
                         </li>
@@ -514,8 +527,12 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                     <h2>Cherry Picking</h2>
                     <p>A cherry-pick is simply taking a virtual "patch" file of a commit compared to its parent and applying it to another base.</p>
                     <p><strong>NOTE:</strong> A cherry-pick doesn't take into account any changes that are <b><u>NOT</u></b> the difference between it and its parent. It's a very focused delta.</p>
-                    <p>&nbsp;</p>
-                    <p>The process:</p>
+                </section>
+
+
+
+                <section>
+                    <h3>The process</h3>
                     <ol style="width: 50%; ">
                         <li><span class="bash"> git diff rev~1 rev </span> -&gt; patch</li>
                         <li>apply patch to the current HEAD</li>
@@ -689,11 +706,16 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 </section>
 
 
+
                 <section>
                     <h2>Rebase</h2>
                     <p>A series of cherry-picks are computed and applied to a new "base."</p>
-                    <p>&nbsp;</p>
-                    <p>The process:</p>
+                </section>
+
+
+
+                <section>
+                    <h3>The process:</h3>
                     <ol style="width: 50%; ">
                         <li>find all the commits that are pointed to
                             <ul>
@@ -832,7 +854,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section class="references">
                     <h3>References</h3>
 
-                    <ul>
+                    <ul style="width: 75%; ">
                         <li>Git Internals - Git Objects <a href="http://git-scm.com/book/en/Git-Internals-Git-Objects">http://git-scm.com/book/en/Git-Internals-Git-Objects</a></li>
                         <li><a href="http://www.infoq.com/presentations/Simple-Made-Easy">"Simple Made Easy"</a> - Rich Hickey's classic on the vital distinction between "simple" and "easy"</li>
                     </ul>
@@ -843,7 +865,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section class="attribution">
                     <h3>Photo Attribution</h3>
 
-                    <ul>
+                    <ul style="width: 75%; ">
                         <li>plumbing - <a href="http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG">http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG</a></li>
                         <li>sink - <a href="http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/">http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/</a></li>
                     </ul>
