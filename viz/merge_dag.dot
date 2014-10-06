@@ -1,0 +1,58 @@
+digraph merge_start_dag {
+    bgcolor=transparent;
+    fontcolor=black;
+    ratio=fill;
+    node [shape=box, style="rounded,filled" fontsize="14"];
+    edge [fontsize="14"];
+
+    subgraph /* Refs */ {
+        node [fillcolor=white]
+        HEAD
+        BR1
+        BR2
+    }
+    subgraph /* Commits */ {
+        node [fillcolor=yellow];
+        c1;
+        c2;
+        c3;
+        c4;
+    }
+    subgraph /* Trees */ {
+        rank=same;
+        node [fillcolor=chartreuse];
+        t1;
+        t2;
+        t3;
+        t4;
+    }
+    subgraph /* Blobs */ {
+        node [fillcolor=cyan];
+        b1;
+        b2;
+        b3;
+        b4;
+        b5;
+        b6;
+        b7;
+    }
+    subgraph /* edges */ {
+        edge [fontsize="9"];
+        edge [fontsize="9"]
+        HEAD -> BR1 [constraint=false]
+        BR2 -> c3 [constraint=false]
+        c1 -> t1
+        t1 -> {b1 b2 b3}
+        t2 -> {b1 b2 b4}
+        t3 -> {b2 b3 b5}
+        t4 -> {b2}
+        c2 -> {c1 t2}
+        c3 -> {c1 t3}
+    }
+    subgraph /* "new" edges */ {
+        edge [color="red", fontcolor="red"]
+        BR1 -> c4 [constraint=false]
+        c4 -> {c2 c3 t4}
+        t4 -> {b6 b7}
+    }
+}

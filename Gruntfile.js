@@ -84,6 +84,9 @@ module.exports = function(grunt) {
                     'images/dag01.png': 'viz/dag01.dot',
                     'images/dag02.png': 'viz/dag02.dot',
                     'images/dag03.png': 'viz/dag03.dot',
+                    'images/merge_dag.png': 'viz/merge_dag.dot',
+                    'images/merge_ours_dag.png': 'viz/merge_ours_dag.dot',
+                    'images/merge_start_dag.png': 'viz/merge_start_dag.dot',
                 }
             },
         },

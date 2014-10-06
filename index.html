@@ -553,60 +553,50 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
 
 
-                <section class="initial-commits">
-                    <div class="container">
-                        <h2>Initial Commits</h2>
-                        <div class="graph">
-                            <div class="node1">
-                                <div class="tag left">t1</div>
-                                <div class="branch left">b1</div>
-                                <div class="label">E</div>
-                            </div>
-                            <div class="node2">
-                                <div class="tag right">t2</div>
-                                <div class="branch right">b2 &nbsp;HEAD</div>
-                                <div class="label">C</div>
-                            </div>
-                            <div class="node3">
-                                <div class="label">D</div>
-                            </div>
-                            <div class="node4">
-                                <div class="label">B</div>
-                            </div>
-                            <div class="node5">
-                                <div class="branch right">master</div>
-                                <div class="label">A</div>
-                            </div>
-                            <div class="segment1">
-                                <span class="endpoint"/>
-                            </div>
-                            <div class="segment2">
-                                <span class="endpoint"/>
-                            </div>
-                            <div class="segment3">
-                                <span class="endpoint"/>
-                            </div>
-                            <div class="segment4">
-                                <span class="endpoint"/>
-                            </div>
-                            <div class="segment5">
-                                <span class="endpoint"/>
-                            </div>
-                        </div>
-                    </div>
+                <section>
+                    <h2>Merge</h2>
+                    <p>A new commit object is created with two parents</p>
+                    <p>(more parents are possible, but don't do it)</p>
                 </section>
 
 
 
                 <section>
-                    <h2>Merge</h2>
-                    <p>A new commit object is created with two parents. (More parents are possible, but don't do it.)</p>
-                    <p>&nbsp;</p>
-                    <p>The process:</p>
-                    <ol>
-                        <li>a recursive 3-way merge is performed; new blobs and trees are created</li>
-                        <li>a commit object is created referencing the new tree and both parents</li>
+                    <h2>Merge Process</h2>
+                    <ol style="width: 80%; ">
+                        <li>the trees of both parents are examined and identical trees/blobs where both hashes of are the same, or where the object is new (after detecting for moves), are added to the new index</li>
+                        <li>a consistency check is done from their common parent to detect if both have added a new file or removed one</li>
+                        <li>perform three-way merges on changes, creating new blobs</li>
+                        <li>if there are no errors, generate a new tree from the index and commit</li>
                     </ol>
+                </section>
+
+
+
+                <section class="dag_merge_start">
+                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge BR2</span>
+</div>
+                    <img src="images/merge_start_dag.png" class="dag-img" style="height: 500px; "/>
+                </section>
+
+
+
+                <section class="dag_merge">
+                    <img src="images/merge_dag.png" class="dag-img"/>
+                </section>
+
+
+
+                <section class="dag_merge_ours_question">
+                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge -s ours BR2</span>
+</div>
+                    <img src="images/merge_start_dag.png" class="dag-img" style="height: 500px; "/>
+                </section>
+
+
+
+                <section class="dag_ours_merge">
+                    <img src="images/merge_ours_dag.png" class="dag-img"/>
                 </section>
 
 
@@ -830,13 +820,18 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                 <section>
                     <h2>Interactive Rebase</h2>
-                    <p>Using the "-i" flag allows you to "step into" the cherry-pick process.</p>
-                    <p>You can:</p>
+                    <p>Using the "-i" flag allows you to "step into" the cherry-pick process</p>
+                </section>
+
+
+
+                <section>
+                    <h3>You can</h3>
                     <ul style="width: 50%;">
-                        <li>Pick which commits to use, including reordering or discarding specific commits</li>
-                        <li>Edit the commit message of a commit</li>
-                        <li>Pause while cherry-picking to allow editing the commit (such as breaking one commit into multiple commits, or removing a sensitive file)</li>
-                        <li>"Squash" a commit into a previous commit, merging them together</li>
+                        <li>pick which commits to use, including reordering or discarding specific commits</li>
+                        <li>edit the commit message of a commit</li>
+                        <li>pause while cherry-picking to allow editing the commit (such as breaking one commit into multiple commits, or removing mistakingly committed testing config or a sensitive file)</li>
+                        <li>"squash" a commit into a previous commit, merging them together</li>
                     </ul>
                 </section>
 
@@ -853,6 +848,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                     <ul style="width: 75%; ">
                         <li>Git Internals - Git Objects <a href="http://git-scm.com/book/en/Git-Internals-Git-Objects">http://git-scm.com/book/en/Git-Internals-Git-Objects</a></li>
+                        <li><a href="http://git-scm.com/2011/07/11/reset.html">Reset Demystified</a></li>
                         <li><a href="http://www.infoq.com/presentations/Simple-Made-Easy">"Simple Made Easy"</a> - Rich Hickey's classic on the vital distinction between "simple" and "easy"</li>
                     </ul>
                 </section>
