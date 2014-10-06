@@ -200,9 +200,8 @@ $ <span class="bash">cat .git/refs/heads/master</span>
 
 
 
-                <section class="dag1">
-                    <h2>DAG</h2>
-                    <svg class="graphContainer"/>
+                <section class="dag01">
+                    <img src="images/dag01.png" class="dag-img"/>
                 </section>
 
 
@@ -227,9 +226,8 @@ $ <span class="bash">git cat-file -p 3666127</span>
 
 
 
-                <section class="dag2">
-                    <h2>DAG</h2>
-                    <svg class="graphContainer"/>
+                <section class="dag02">
+                    <img src="images/dag02.png" class="dag-img"/>
                 </section>
 
 
@@ -260,9 +258,8 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
 
 
 
-                <section class="dag3">
-                    <h2>DAG</h2>
-                    <svg class="graphContainer"/>
+                <section class="dag03">
+                    <img src="images/dag03.png" class="dag-img"/>
                 </section>
 
 
@@ -879,11 +876,6 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
         <script src="lib/js/head.min.js"></script>
         <script src="js/reveal.js"></script>
 
-        <!-- dagre-d3 support -->
-        <script type='text/javascript' src="lib/js/d3.v3.min.js"></script>
-        <script type='text/javascript' src="lib/js/dagre-d3.v0.2.9.js"></script>
-        <script src="js/preso.js"></script>
-
         <script>
 
             // Full list of configuration options available here:
@@ -919,10 +911,6 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                     // { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
                 ]
             });
-
-            Reveal.addEventListener( 'ready', function(event) {
-                Preso.drawGraphs();
-            } );
 
         </script>
 

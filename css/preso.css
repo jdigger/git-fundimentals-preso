@@ -25,6 +25,12 @@ div.note {
   box-shadow: none;
   width: 300px; }
 
+.reveal .slides img.dag-img {
+  border: none;
+  box-shadow: none;
+  background: none;
+  height: 700px; }
+
 div.bash, span.bash {
   font-family: monospace;
   white-space: pre;
@@ -1280,3 +1286,5 @@ svg {
   stroke: #333;
   stroke-width: 2px;
   fill: none; }
+
+/*# sourceMappingURL=preso.css.map */

@@ -1,0 +1,38 @@
+digraph dag01 {
+    pad=0.2;
+    bgcolor=transparent;
+    fontcolor=black;
+    ratio=fill;
+    rankdir=TB;
+    node [shape=box, style="rounded,filled" fontsize="14"];
+    edge [fontsize="14"];
+
+    subgraph /* Refs */ {
+        rank = same;
+        node [fillcolor=white];
+        HEAD;
+        master;
+    }
+    subgraph /* Commits */ {
+        node [fillcolor=yellow];
+        "a8036eb";
+    }
+    subgraph /* Trees */ {
+        node [fillcolor=chartreuse];
+        "0550b75";
+        "cb63181";
+    }
+    subgraph /* Blobs */ {
+        node [fillcolor=cyan];
+        "77bd771";
+        "63ffb2b";
+    }
+
+    HEAD -> master [label=<ref<BR/>refs/heads/master>]
+    master -> "a8036eb" [label=<commit<BR/>'First good version'> constraint=false];
+    "a8036eb" -> "0550b75" [label=<tree<BR/>/>];
+    "0550b75" -> "cb63181" [label=<tree<BR/>morefiles>];
+    "0550b75" -> "77bd771" [label=<blob<BR/>file1.txt>];
+    "cb63181" -> "77bd771" [taillabel=<blob<BR/>file3.txt>];
+    "0550b75" -> "63ffb2b" [headlabel=<blob<BR/>file2.txt>];
+}

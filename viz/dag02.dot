@@ -1,0 +1,51 @@
+digraph dag02 {
+    pad=0.2;
+    bgcolor=transparent;
+    fontcolor=black;
+    ratio=fill;
+    node [shape=box, style="rounded,filled" fontsize="14"];
+    edge [fontsize="14"];
+
+    subgraph /* Refs */ {
+        rank = same;
+        node [fillcolor=white];
+        HEAD;
+        master;
+    }
+    subgraph /* Commits */ {
+        node [fillcolor=yellow];
+        rank=same;
+        "a8036eb";
+        "7581387";
+    }
+    subgraph /* Trees */ {
+        node [fillcolor=chartreuse];
+        "0550b75";
+        "cb63181";
+        "3666127";
+    }
+    subgraph /* Blobs */ {
+        node [fillcolor=cyan];
+        "77bd771";
+        "63ffb2b";
+        "faff7b9";
+    }
+    HEAD -> master [label=<ref<BR/>refs/heads/master>]
+    master -> "7581387" [label=<commit<BR/>'Added more cow-bell'> constraint=false];
+    subgraph /* "old" edges */ {
+        edge [fontsize="9"];
+        "a8036eb" -> "0550b75" [label=<tree<BR/>/>];
+        "0550b75" -> "77bd771" [label=<blob<BR/>file1.txt>];
+        "0550b75" -> "cb63181" [label=<tree<BR/>morefiles>];
+        "0550b75" -> "63ffb2b" [label=<blob<BR/>file2.txt>];
+        "cb63181" -> "77bd771" [label=<blob<BR/>file3.txt>];
+    }
+    subgraph /* "new" edges */ {
+        edge [color="red", fontcolor="red"];
+        "7581387" -> "a8036eb" [label=<parent>];
+        "7581387" -> "3666127" [label=<tree<BR/>/>];
+        "3666127" -> "cb63181" [label=<tree<BR/>morefiles>];
+        "3666127" -> "faff7b9" [label=<blob<BR/>file1.txt>];
+        "3666127" -> "63ffb2b" [label=<blob<BR/>file2.txt>];
+    }
+}
