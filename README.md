@@ -1,4 +1,8 @@
+# Purpose
 
+A presentation on how git is "simple", and its implications.
+
+To view, either download the source and open `index.html` in a HTML5 web browser, or go to https://rawgit.com/jdigger/git-fundimentals-preso/master/index.html
 
 # Uses
 
