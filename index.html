@@ -47,7 +47,10 @@
                     <h1>Git Made Simple</h1>
                     <h3>How Git Does Its Magic</h3>
                     <p>
-                        <small>Created by <a href="https://github.com/jdigger/">Jim Moore</a> / <a href="http://twitter.com/jdiggerj">@jdiggerj</a></small>
+                        <small>Created by <a href="https://github.com/jdigger/">Jim Moore</a></small>
+                    </p>
+                    <p>
+                        <small><a href="https://keybase.io/jmoore">keybase.io/jmoore</a> / <a href="http://twitter.com/jdiggerj">@jdiggerj</a></small>
                     </p>
                     <p><img src="images/Git-Logo-2Color.png" class="git-logo"/></p>
                     <p style="font-size: 15px; "><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Git Made Simple</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/git-fundimentals-preso" rel="dct:source">https://github.com/jdigger/git-fundimentals-preso</a>.</p>
@@ -178,6 +181,13 @@ Some cowbell</div>
                     <p>Because each object's content has a pointer to the one below, a change in a sub-object guarantees that the hash for the parent will be different.</p>
                 </section>
 
+
+
+                <section>
+                    <p>For the developers/computer-science people, this is an extremely well-proven technique known as a <a href="https://en.wikipedia.org/wiki/Merkle_tree">hash tree (a.k.a. Merkle tree)</a>.</p>
+                    <p>&nbsp;</p>
+                    <p>It is used as a highly efficient way efficient way to guarantee data integrity for everything from filesystems and databases (e.g., <a href="http://open-zfs.org/wiki/Main_Page">ZFS</a>, <a href="https://github.com/basho/riak">Riak</a>, <a href="https://cassandra.apache.org/">Casandra</a>) to peer-to-peer data transfer (e.g., <a href="http://www.bittorrent.com/">BitTorrent</a>) to currencies (e.g., <a href="https://bitcoin.org/en/">Bitcoin</a>)</p>
+                </section>
 
 
                 <section>
@@ -444,9 +454,14 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                 <section>
                     <h2>Mutability</h2>
+                    <p>&nbsp;</p>
                     <p class="strong">The contents of "objects" can never change.<br/>Period.</p>
-                    <p>Changing an object changes its hash, thereby guaranteeing consistency.</p>
-                    <p>References may do so, which is why they don't have a hash.</p>
+                </section>
+                <section>
+                    <p>Changing an object changes its hash, thereby guaranteeing consistency</p>
+                </section>
+                <section>
+                    <p>"References" may change, which is why they don't have a hash</p>
                 </section>
 
 

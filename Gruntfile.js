@@ -4,16 +4,6 @@ module.exports = function(grunt) {
     // Project configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        meta: {
-            banner:
-                '/*!\n' +
-                ' * reveal.js <%= pkg.version %> (<%= grunt.template.today("yyyy-mm-dd, HH:MM") %>)\n' +
-                ' * http://lab.hakim.se/reveal-js\n' +
-                ' * MIT licensed\n' +
-                ' *\n' +
-                ' * Copyright (C) 2014 Hakim El Hattab, http://hakim.se\n' +
-                ' */'
-        },
 
         qunit: {
             files: [ 'test/*.html' ]
@@ -21,7 +11,6 @@ module.exports = function(grunt) {
 
         uglify: {
             options: {
-                banner: '<%= meta.banner %>\n'
             },
             build: {
                 src: 'js/reveal.js',
