@@ -12,5 +12,5 @@ To view, either download the source and open `index.html` in a HTML5 web browser
 
 ## Licenses
 
-* The presentation content is [CC Attribution 4.0 licensed](http://creativecommons.org/licenses/by/4.0/), Copyright (C) 2014 Jim J. Moore
+* The presentation content is [CC Attribution 4.0 licensed](http://creativecommons.org/licenses/by/4.0/), Copyright (C) 2014-16 Jim J. Moore
 * reveal.js is MIT licensed, Copyright (C) 2014 Hakim El Hattab, http://hakim.se

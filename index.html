@@ -57,16 +57,24 @@
                 </section>
 
 
+                <section class="toc">
+                    <img src="images/cool_dash_by_vexorb-d4i8mak.png"/>
+                    <ol>
+                        <li>Naming Things</li>
+                        <li>Blobs, Trees and Commits</li>
+                        <li>Hash Trees</li>
+                        <li>Immutable DAG Benefits</li>
+                        <li>Performance and Cleanliness</li>
+                        <li>The Index</li>
+                        <li>References</li>
+                        <li>Add/Commit/Checkout/Cherry-Pick</li>
+                        <li>Merge/Rebase</li>
+                    </ol>
+                </section>
 
-                <section class="plumbing">
-                    <div class="plumbing">
-                        <div style="width: 50%; max-width: 50%; float: left; ">
-                            <img src="images/plumbing.jpg"/>
-                        </div>
-                        <div style="width: 50%; max-width: 50%; float: right; ">
-                            <img src="images/sink.jpg"/>
-                        </div>
-                    <div>
+
+                <section class="linus">
+                    <img src="images/LinuxCon_Europe_Linus_Torvalds_03.jpg" class="linus"/>
                 </section>
 
 
@@ -86,17 +94,109 @@ $ <span class="bash">git config user.email "gitfund@git.com"</span></div>
 
 <div class="bash">$ <span class="bash">echo "Some cowbell" &gt; file1.txt</span>
 $ <span class="bash">echo "Just some file2 data" &gt; file2.txt</span>
-$ <span class="bash">mkdir morefiles ; cp file1.txt morefiles/file3.txt</span>
-$ <span class="bash">git hash-object file1.txt</span>
+$ <span class="bash">mkdir morefiles ; cp file1.txt morefiles/file3.txt</span></div>
+                    <p/>
+                    <div class="note">
+                        <p>At this point we now have two identical files and another different file</p>
+                    </div>
+                    <img class="got-a-fever" src="images/more_cowbell_by_asylumactas-d37n9z9.jpg"/>
+                </section>
+
+
+                <section>
+                    <h1>What's in a name?</h1>
+
+                    <p>Names are important...</p>
+
+                    <!--
+                    There are names, and then there are NAMES.
+
+                    "Jim" is a great name. Doesn't tell you much about me, but is "generally" useful for identifying me distinctly from others in a room.
+
+                    "Jim Moore" is even better. Not only does it further decrease the likelihood that there will be others with the same name in a room, it also tells you a bit about my ancestory. (From the moors of Ireland.) Though at one point in my career there were four "Jim Moore"s in the same company, and my office was right next door to one of the other Jim Moores: a really cool guy that was under five feet and black as night -- which is not me, even though HR and Accounting would constantly confuse us since we were even in the same department.
+
+                    Wouldn't it be cooler if we still did names like they did in the medival period based on more INHERENT qualities? Maybe mine would be "Jim the Byte-Binder of Denver, eldest of James the Shapesmaster and Judy the Wise." Now THAT would be a name less likely to be duplicated...
+                    -->
+                </section>
+
+
+                <section>
+                    <h2>How do we want to identify the content we just created?</h2>
+
+                    <p>We want some way to keep track of content <b><u>and</u></b> know when that content has <u>changed</u>.</p>
+                    <p>&nbsp;</p>
+                    <p><i>Ideally</i> in a way where that name/identifier would survive context shifts (such as being copied)</p>
+                </section>
+
+
+                <section>
+                    <div style="font-size: 200%">
+                        <p>File name?</p>
+                        <p>File name (<a href="https://en.wikipedia.org/wiki/Uniform_Resource_Name">URN</a>?) and modification time?</p>
+                        <p>A self-incrementing revision number?</p>
+                    </div>
+                    <img class="fragment ugh-as-if" src="images/ugh-as-if.png"/>
+                </section>
+
+
+                <section>
+                    <h2>Solution</h2>
+
+                    <p>We're going to give it a name based on its <b><u>content</u></b> rather than something effectively random.</p>
+                    <p>&nbsp;</p>
+                    <p><a href="https://en.wikipedia.org/wiki/Hash_function"><b>Hash function</b></a> &mdash; any function that can be used to map data of arbitrary size to data of fixed size. <img style="height: 300px" src="images/SnarkHunter-Arrow-in-the-gold.svg"/></p>
+                </section>
+
+
+                <section>
+                    <div style="position: relative; top: -50px">
+                        <h2>Naming the Content</h2>
+
+<div class="bash" style="font-size: 150%">$ <span class="bash">git hash-object file1.txt</span>
 77bd771f7fefc66994a22d922cad923ae068675a
 $ <span class="bash">git hash-object file2.txt</span>
 63ffb2bff74e9161a82b82999718f441df6a68f1
 $ <span class="bash">git hash-object morefiles/file3.txt</span>
 77bd771f7fefc66994a22d922cad923ae068675a</div>
                     <p/>
-                    <p class="note">
-                        Hashes for same content are the same; for different content it's different.
-                    </p>
+                    <div class="note">
+                        <ul>
+                            <li>The hash uses <a href="https://en.wikipedia.org/wiki/SHA-1">the SHA-1 algorithm</a>, producing a 160 bit (40 hex characters) representation of the data</li>
+                            <li>Hashes for <b><i>exactly</i></b> the same content are the same; for different content (even a single bit) the hash is radically different</li>
+                        </ul>
+                    </div>
+                </section>
+
+
+
+                <section class="plumbing">
+                    <div class="plumbing">
+                        <div style="width: 50%; max-width: 50%; float: left; ">
+                            <img src="images/plumbing.jpg"/>
+                        </div>
+                        <div style="width: 50%; max-width: 50%; float: right; ">
+                            <img src="images/sink.jpg"/>
+                        </div>
+                    <div>
+                </section>
+
+
+
+                <section>
+                    <h2>Identify What Should be Saved To The Repository</h2>
+
+<div class="bash">$ <span class="bash">git add file1.txt file2.txt morefiles/file3.txt</span>
+$ <span class="bash">git ls-files --stage</span>
+100644 77bd771f7fefc66994a22d922cad923ae068675a 0	file1.txt
+100644 63ffb2bff74e9161a82b82999718f441df6a68f1 0	file2.txt
+100644 77bd771f7fefc66994a22d922cad923ae068675a 0	morefiles/file3.txt</div>
+                    <p/>
+                    <div class="note">
+                        <ul>
+                            <li><code>ls-files</code> shows what is being tracked; it is the pluming for <code>status</code></li>
+                            <li>Nothing has been saved to the repository yet: We have merely identified what files &mdash; and at what state &mdash; should be saved</li>
+                        </ul>
+                    </div>
                 </section>
 
 
@@ -104,8 +204,7 @@ $ <span class="bash">git hash-object morefiles/file3.txt</span>
                 <section>
                     <h2>Save To The Repository</h2>
 
-<div class="bash">$ <span class="bash">git add file1.txt file2.txt morefiles/file3.txt</span>
-$ <span class="bash">git commit -m "First good version"</span>
+<div class="bash">$ <span class="bash">git commit -m "First good version"</span>
 [master (root-commit) 3b1b4ff] First good version
  3 files changed, 3 insertions(+)
  create mode 100644 file1.txt
@@ -118,7 +217,7 @@ $ <span class="bash">git commit -m "First good version"</span>
                             <li>The "id" for the commit starts with "3b1b4ff"
                                 <ul>
                                     <li>It's actually "3b1b4ff08b048aceeb4ccb38739101ec94b8fd01", as we'll see later</li>
-                                    <li>The first seven characters are virtually guaranteed to make it unique, so it's usually shortened to that</li>
+                                    <li>The first seven characters are usually enough to make it unique, so it's often shortened to that</li>
                                 </ul>
                             </li>
                         </ul>
@@ -128,20 +227,22 @@ $ <span class="bash">git commit -m "First good version"</span>
 
 
                 <section>
-                    <h2>Inspecting the Commit</h2>
+                    <div style="position: relative; top: -50px">
+                        <h2>Inspecting the Commit</h2>
 
-<div class="bash">$ <span class="bash">git cat-file -p 3b1b4ff</span>
+<div class="bash" style="font-size: 120%">$ <span class="bash">git cat-file -p 3b1b4ff</span>
 tree 0550b757d5b412ab40416d2c7ede1313d1c38087
 author Git Fundimentals &lt;gitfund@git.com&gt; 1409711557 -0600
 committer Git Fundimentals &lt;gitfund@git.com&gt; 1409711557 -0600
 
 First good version</div>
+                </div>
                 </section>
 
 
 
                 <section>
-                    <h2>The commit has these fields</h2>
+                    <h2>The commit fields</h2>
                     <ul>
                         <li><b><u>tree</u>:</b> id of the object that contains the file tree structure</li>
                         <li><b><u>parent(s)</u>:</b> 0..n ids to the parents of this commit. Most commits will have one parent; most merges will have two, though can have any number of parents; this is the first so it has none</li>
@@ -173,23 +274,6 @@ Some cowbell</div>
                 </section>
 
 
-
-                <section>
-                    <h2>Hashes</h2>
-                    <p>Guaranteed that exactly the same content gives exactly the same hash (<a href="http://en.wikipedia.org/wiki/SHA-1">SHA-1</a>) and it's "mathematically impossible" for different content to give the same hash.</p>
-                    <p>&nbsp;</p>
-                    <p>Because each object's content has a pointer to the one below, a change in a sub-object guarantees that the hash for the parent will be different.</p>
-                </section>
-
-
-
-                <section>
-                    <p>For the developers/computer-science people, this is an extremely well-proven technique known as a <a href="https://en.wikipedia.org/wiki/Merkle_tree">hash tree (a.k.a. Merkle tree)</a>.</p>
-                    <p>&nbsp;</p>
-                    <p>It is used as a highly efficient way efficient way to guarantee data integrity for everything from filesystems and databases (e.g., <a href="http://open-zfs.org/wiki/Main_Page">ZFS</a>, <a href="https://github.com/basho/riak">Riak</a>, <a href="https://cassandra.apache.org/">Casandra</a>) to peer-to-peer data transfer (e.g., <a href="http://www.bittorrent.com/">BitTorrent</a>) to currencies (e.g., <a href="https://bitcoin.org/en/">Bitcoin</a>)</p>
-                </section>
-
-
                 <section>
                     <h2>On the Filesystem</h2>
 
@@ -217,22 +301,32 @@ $ <span class="bash">cat .git/refs/heads/master</span>
 
 
 
-                <section>
-                    <h2>Change File1.txt</h2>
+                <section class="more-cowbell">
+                    <img src="images/more-cowbell_4392785_GIFSoup.com.gif"/>
+                </section>
 
-<div class="bash">$ <span class="bash">echo "More cow-bell\!" > file1.txt</span>
+
+                <section>
+                    <div style="position: relative; top: -100px">
+                        <h2>Change File1.txt</h2>
+
+<div class="bash" style="font-size: 90%; overflow: none; max-height: none">$ <span class="bash">echo "More cow-bell\!" > file1.txt</span>
+
 $ <span class="bash">git commit -am "Added more cow-bell."</span>
 [master 7581387] Added more cow-bell.
  1 file changed, 1 insertion(+), 1 deletion(-)
+
 $ <span class="bash">git cat-file -p 7581387</span>
 tree 366612747e1b0730cdbb680bb48ba6132b321848
 parent 3b1b4ff08b048aceeb4ccb38739101ec94b8fd01
 author Git Fundimentals &lt;gitfund@git.com&gt; 1409885160 -0600
 committer Git Fundimentals &lt;gitfund@git.com&gt; 1409885160 -0600
+
 $ <span class="bash">git cat-file -p 3666127</span>
 100644 blob faff7b9f491fea306a748f2e17e536918fb6a601  file1.txt
 100644 blob 63ffb2bff74e9161a82b82999718f441df6a68f1  file2.txt
 040000 tree cb63181eaa27bf4caedf9d9d212840206a77c11d  morefiles</div>
+                    </div>
                 </section>
 
 
@@ -244,9 +338,10 @@ $ <span class="bash">git cat-file -p 3666127</span>
 
 
                 <section>
-                    <h2>Rename Files</h2>
+                    <div style="position: relative; top: -150px">
+                        <h2>Rename Files</h2>
 
-<div class="bash" style="font-size: 70%; ">$ <span class="bash">mv file2.txt wow.txt</span>
+<div class="bash" style="font-size: 90%; overflow: none; max-height: none">$ <span class="bash">mv file2.txt wow.txt</span>
 $ <span class="bash">mv morefiles hasfiles</span>
 $ <span class="bash">git add -A</span>
 $ <span class="bash">git commit -m "Renamed files"</span>
@@ -265,6 +360,7 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
 100644 blob faff7b9f491fea306a748f2e17e536918fb6a601  file1.txt
 040000 tree cb63181eaa27bf4caedf9d9d212840206a77c11d  hasfiles
 100644 blob 63ffb2bff74e9161a82b82999718f441df6a68f1  wow.txt</div>
+    </div>
                 </section>
 
 
@@ -274,23 +370,61 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
                 </section>
 
 
+                <section>
+                    <p>Because each object's content has a pointer to the one below,<br/>
+                        a change in a sub-object guarantees that the hash for the parent will be different</p>
+                </section>
+
+
+
+                <section>
+                    <p>For the developers/computer-science people,<br/>
+                        this is an extremely well-proven technique known as a <a href="https://en.wikipedia.org/wiki/Merkle_tree">hash tree (a.k.a. Merkle tree)</a></p>
+                    <p>&nbsp;</p>
+                    <p>Instead of using pointers comprised of memory addresses,<br/>
+                        it uses pointers using a unique "name" based upon the referenced value's <b><u>contents</u></b></p>
+                </section>
+
+
+
+                <section>
+                    <div class="data-integrity">
+                        <img class="rainbow-dash-armor" src="images/raindow_dash_with_armor_vector_by_pegasi_pony-d4jhgkc.png"/>
+                        <p style="font-size: 125%">It is used as a highly efficient way to guarantee data integrity<br/>
+                            for everything from filesystems and databases (e.g., <a href="http://open-zfs.org/wiki/Main_Page">ZFS</a>, <a href="https://github.com/basho/riak">Riak</a>, <a href="https://cassandra.apache.org/">Casandra</a>)<br/>
+                            to peer-to-peer data transfer (e.g., <a href="http://www.bittorrent.com/">BitTorrent</a>)<br/>
+                            to currencies (e.g., <a href="https://bitcoin.org/en/">Bitcoin</a>)</p>
+                    </div>
+                </section>
+
 
                 <section>
                     <h2>Direction of the Arrows</h2>
 
-                    <p>The DAG based on hashes is what makes it possible for git to be fully distributed.</p>
+                    <p>The DAG (Directed Acyclic Graph) based on hashes is what makes it possible for git to be fully distributed</p>
                 </section>
 
 
 
                 <section>
-                    <p>Blobs are shared between trees, trees shared among commits, and commits shared among references.</p>
+                    <div style="font-size: 200%">
+                        <p>Blobs are shared between Trees</p>
+                        <p>Trees are shared among Commits</p>
+                        <p>Commits are shared among References</p>
+                    </div>
                 </section>
 
 
 
                 <section>
-                    <p>Because identical content hashes to the same thing, it's trivial to do the consistency checks needed to know exactly where, when and how content diverged even among systems with no communication between them.</p>
+                    <img src="images/same_different_ponies.jpg"/>
+                    <p>Because identical content hashes to the same thing,<br/>
+                        and you have all of the content all of the time,<br/>
+                        it's trivial to do the consistency checks needed to know <u>exactly</u><br/>
+                        <b><i>where, when and how</i></b> content diverged</p>
+                    <p>&nbsp;</p>
+                    <p>Even among systems with no communication between them,<br/>
+                        or even knowing how you're going to want to slice-n-dice that information ahead of time</p>
                 </section>
 
 
@@ -302,6 +436,7 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
                     <p>How, since nothing in the data-structures recorded that?</p>
                     <p>&nbsp;</p>
                     <p><a href="http://stackoverflow.com/questions/7938582/how-does-git-detect-similar-files-for-its-rename-detection">Some of the porcelain uses rename detection</a> based on configurable sensitivity.</p>
+                    <p>&nbsp;</p>
                     <p>Because it's easily detectable at runtime, some of the porcelain, such as "git blame -M" can show how individual lines have moved around between files.</p>
                 </section>
 
@@ -317,15 +452,10 @@ $ <span class="bash">git cat-file -p 96996c4f</span>
 
                 <section class="constant-time">
                     <h2>Constant Time</h2>
-                    <div style="position: relative; ">
-                        <div>
-                            <svg class="graphContainer"/>
-                        </div>
-                        <div>
-                            <p class="note">Notice that navigating between revisions is an O(1) operation.</p>
-                            <p class="note" style="font-size: .8em; ">Writing to the repository is extremely fast: no matter how many files there are, it's just enough time to calculate the SHA-1s of the new content, zlib compress it, and copy just that new content into the object store.</p>
-                        </div>
-                    </div>
+                    <p>&nbsp;</p>
+                    <p>Notice that navigating between revisions is an O(1) operation</p>
+                    <p>&nbsp;</p>
+                    <p style="font-size: .8em; ">Writing to the repository is extremely fast: no matter how many files there are, it's just enough time to calculate the SHA-1s of the new content, zlib compress it, and copy just that new content into the object store</p>
                 </section>
 
 
@@ -355,6 +485,8 @@ $ <span class="bash">find .git/objects -type f</span>
 
                 <section>
                     <h1>The Index</h1>
+                    <p>&nbsp;</p>
+                    <p>The portal between the working-directory and the repository</p>
                 </section>
 
 
@@ -369,6 +501,8 @@ $ <span class="bash">find .git/objects -type f</span>
                                 <li>"Oops, I didn't mean to commit the password file. Let's try that again."</li>
                                 <li>"Oops. I had a typo in the commit message."</li>
                                 <li>"Oops..."</li>
+                                <li>Improving the readability/understandability of the project's history</li>
+                                <li>A desire to project the illusion of undeserved compentance</li>
                             </ul>
                         </li>
                     </ul>
@@ -377,13 +511,17 @@ $ <span class="bash">find .git/objects -type f</span>
 
 
                 <section>
-                    <p>As <a href="http://en.wikipedia.org/wiki/Indirection">the famous aphorism goes</a>:<br/> "All problems in computer science can be solved by another level of indirection."</p>
+                    <p>As <a href="http://en.wikipedia.org/wiki/Indirection">the famous aphorism goes</a>:</p>
+                    <p style="font-size: 125%">"All problems in computer science can be solved by another level of indirection."</p>
                 </section>
 
 
 
                 <section>
-                    <p>Thus, instead of just the working directory and the repository, there is also the "index."</p>
+                    <p style="font-size: 150%">Thus, instead of just the Working Directory and the Repository,<br/>
+                        there is also the Index</p>
+                    <p>&nbsp;</p>
+                    <p style="font-size: 75%">also known as the Dir Cache, Staging Area, etc.</p>
                 </section>
 
 
@@ -397,18 +535,20 @@ $ <span class="bash">find .git/objects -type f</span>
 
 
                 <section>
-                    <h2>Manipulating the Index</h2>
-                    <p>&nbsp;</p>
-                    <ul>
-                        <li><span class="bash">git add file</span> and <span class="bash">git rm file</span> - adds and removes files from the index</li>
-                        <li><span class="bash">git add -p file</span> - add a "patch" from this file, allowing selection of specific pieces of the file and not the whole thing
-                            <ul>
-                                <li>While this can be done at the command line, this is really something that a graphical tool like <a href="http://www.sourcetreeapp.com/">SourceTree</a> makes <i><b>much</b></i> easier</li>
-                            </ul>
-                        </li>
-                        <li><span class="bash">git reset HEAD~1</span> - move the index to what it looked like before the last commit, but leave the files as they were (i.e., "forget" that <span class="bash">git commit</span> happened)</li>
-                        <li><span class="bash">git reset --hard HEAD</span> - move the index <u>and</u> filesystem to what it looked like after last commit (very commonly done to toss away every that's been done since the last commit because of a bad rabbit trail)</li>
-                    </ul>
+                    <div style="position: relative; top: -120px">
+                        <h2>Manipulating the Index</h2>
+                        <p>&nbsp;</p>
+                        <ul style="line-height: 1.8">
+                            <li><span class="bash">git add file</span> and <span class="bash">git rm file</span> - adds and removes files from the index</li>
+                            <li><span class="bash">git add -p file</span> - add a "patch" from this file, allowing selection of specific pieces of the file and not the whole thing
+                                <ul>
+                                    <li>While this can be done at the command line, this is really something that a graphical tool like <a href="http://www.sourcetreeapp.com/">SourceTree</a> makes <i><b>much</b></i> easier</li>
+                                </ul>
+                            </li>
+                            <li><span class="bash">git reset HEAD~1</span> - move the index to what it looked like before the last commit, but leave the files as they were (i.e., "forget" that <span class="bash">git commit</span> happened)</li>
+                            <li><span class="bash">git reset --hard HEAD</span> - move the index <u>and</u> filesystem to what it looked like at the last commit (very commonly done to toss away every that's been done since the last commit because of a bad rabbit trail)</li>
+                        </ul>
+                    </div>
                 </section>
 
 
@@ -421,17 +561,28 @@ $ <span class="bash">find .git/objects -type f</span>
 
                 <section>
                     <h2>Tags</h2>
-                    <div class="bash" style="font-size: 70%; ">$ <span class="bash">git tag t</span>
-$ <span class="bash">cat .git/refs/tags/t</span>
-e0012413fb1c0728dc1d9b86c9b074dfc24a220a
-$ <span class="bash">git cat-file -t e001241</span>
-commit
+                    <div class="bash" style="font-size: 150%; ">$ <span class="bash">git tag aTag</span>
 
-$ <span class="bash">git tag -a annTag -m "annotated tag here"</span>
+$ <span class="bash">cat .git/refs/tags/aTag</span>
+e0012413fb1c0728dc1d9b86c9b074dfc24a220a
+
+$ <span class="bash">git cat-file -t e001241</span>
+commit</div>
+                </section>
+
+
+
+                <section>
+                    <div style="position: relative; top: -100px">
+                        <h2>Annotated Tags</h2>
+                        <div class="bash" style="font-size: 100%; overflow: none; max-height: none">$ <span class="bash">git tag -a annTag -m "annotated tag here"</span>
+
 $ <span class="bash">cat .git/refs/tags/annTag</span>
 85aca4362a29ddb70a70c6d6f882d4c1e04b2eb3
+
 $ <span class="bash">git cat-file -t 85aca43</span>
 tag
+
 $ <span class="bash">git cat-file -p 85aca43</span>
 object e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 type commit
@@ -439,15 +590,16 @@ tag annTag
 tagger Git Fundimentals &lt;gitfund@git.com&gt; 1410039830 -0600
 
 annotated tag here</div>
+                    </div>
                 </section>
-
 
 
                 <section>
                     <h2>Branches</h2>
                     <div class="bash">$ <span class="bash">cat .git/refs/heads/master</span>
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
-                    <p>The big difference between branches and tags is that the value in that file will change over time during a normal workflow. (i.e., As you make changes to the branch.)</p>
+                    <p>&nbsp;</p>
+                    <p>The big difference between branches and tags is that the value in that<br/>file <u>will change</u> over time during a normal workflow. (i.e., As you make changes to the branch.)</p>
                 </section>
 
 
@@ -455,7 +607,9 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section>
                     <h2>Mutability</h2>
                     <p>&nbsp;</p>
-                    <p class="strong">The contents of "objects" can never change.<br/>Period.</p>
+                    <p class="strong">The contents of "objects" can never change.</p>
+                    <p>&nbsp;</p>
+                    <p class="strong">Period.</p>
                 </section>
                 <section>
                     <p>Changing an object changes its hash, thereby guaranteeing consistency</p>
@@ -468,27 +622,11 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                 <section>
                     <h2>HEAD</h2>
-                    <p>"HEAD" (.git/HEAD) is not really a "reference" or even really a part of git's plumbing</p>
+                    <p>"HEAD" (.git/HEAD) is not really a "reference"</p>
                     <p>&nbsp;</p>
                     <p>It's used as part of the porcelain to keep track of where the "user" is</p>
                     <p>&nbsp;</p>
                     <p>A "detached HEAD" is simply a HEAD that points to a specific commit instead of a branch</p>
-                </section>
-
-
-
-                <section>
-                    <h2>Checking Out A Branch</h2>
-                    <p><span class="bash">git checkout <i>branchname</i></span></p>
-                    <p style="font-size: 120%; ">The process:</p>
-                    <ol style="font-size: 120%; ">
-                        <li>lookup the tree used by the commit pointed at by the branch</li>
-                        <li>update the local filesystem to match the tree</li>
-                        <li>change HEAD to point to the branch</li>
-                    </ol>
-                    <div style="width: 100px;">
-                        <img src="images/sink.jpg"/>
-                    </div>
                 </section>
 
 
@@ -521,44 +659,48 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 </section>
 
 
-
                 <section>
-                    <h2>Commit</h2>
+                    <p style="font-size: 200%"><span class="bash"> git add <i>filename</i> </span></p>
                     <p>The process:</p>
-                    <ol style="width: 80%; ">
-                        <li>compute hashes for all blobs in the index, writing objects for "new" hashes
-                            <ul><li>Yet another advantage of the index is that it minimizes the amount of work that needs to happen for the commit, since it only needs to hash blobs in the index</li></ul>
-                        </li>
-                        <li>compute hashes for trees and commit object, writing them out</li>
-                        <li>update the head of the branch pointed to by HEAD</li>
+                    <ol style="width: 80%; font-size: 150%; line-height: 1.5">
+                        <li>Compare the working-directory hash of the file to what is in the index
+                        <li>If the hashes are different, copy the file into the object store as a new blob</li>
+                        <li>Record the hash for the file in the Index (a.k.a., "tree builder")</li>
                     </ol>
                 </section>
 
 
 
                 <section>
-                    <h2>Cherry Picking</h2>
-                    <p>A cherry-pick is simply taking a virtual "patch" file of a commit compared to its parent and applying it to another base.</p>
-                    <p><strong>NOTE:</strong> A cherry-pick doesn't take into account any changes that are <b><u>NOT</u></b> the difference between it and its parent. It's a very focused delta.</p>
-                </section>
-
-
-
-                <section>
-                    <h3>The process</h3>
-                    <ol style="width: 50%; ">
-                        <li><span class="bash"> git diff rev~1 rev </span> -&gt; patch</li>
-                        <li>apply patch to the current HEAD</li>
-                        <li>create a new commit, copying over the<br/>metadata (such as "author") from the cherry-picked commit</li>
+                    <p style="font-size: 200%"><span class="bash"> git commit -m "<i>message</i>" </span></p>
+                    <p>The process:</p>
+                    <ol style="width: 80%; font-size: 150%; line-height: 1.5">
+                        <li>Write the Index out as a tree object
+                        <li>Create a commit object that has the tree's hash and meta-data (author, date, comment, etc.)</li>
+                        <li>Update the head of the branch pointed to by HEAD</li>
                     </ol>
                 </section>
 
 
+                <section>
+                    <p style="font-size: 200%"><span class="bash"> git checkout <i>branchname</i> </span></p>
+                    <p>The process:</p>
+                    <ol style="width: 80%; font-size: 150%; line-height: 1.5">
+                        <li>Replace the Index with the tree for the commit</li>
+                        <li>Update the local filesystem to match the Index</li>
+                        <li>Change HEAD to point to the branch</li>
+                    </ol>
+                </section>
+
 
                 <section>
-                    <h2>Rebasing</h2>
-                    <p>"Rebasing" is effectively taking a series of cherry-picks and applying them in order, usually updating the current branch.</p>
-                    <p>This has the effect of changing the "base" of the current branch.</p>
+                    <p style="font-size: 200%"><span class="bash"> git cherry-pick <i>rev</i> </span></p>
+                    <p>The process:</p>
+                    <ol style="width: 80%; font-size: 150%; line-height: 1.5">
+                        <li><span class="bash">git diff -C rev~1 rev</span> -&gt; patch</li>
+                        <li>Apply patch to the current HEAD</li>
+                        <li>Create a new commit, copying over the<br/>metadata (such as "author") from the cherry-picked commit</li>
+                    </ol>
                 </section>
 
 
@@ -571,27 +713,31 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                 <section>
                     <h2>Merge</h2>
-                    <p>A new commit object is created with two parents</p>
-                    <p>(more parents are possible, but don't do it)</p>
+                    <p style="font-size: 150%">A new commit object is created with two parents</p>
+                    <p style="font-size: 50%">(more parents are possible, but don't do it)</p>
                 </section>
-
 
 
                 <section>
-                    <h2>Merge Process</h2>
-                    <ol style="width: 80%; ">
-                        <li>the trees of both parents are examined and identical trees/blobs where both hashes of are the same, or where the object is new (after detecting for moves), are added to the new index</li>
-                        <li>a consistency check is done from their common parent to detect if both have added a new file or removed one</li>
-                        <li>perform three-way merges on changes, creating new blobs</li>
-                        <li>if there are no errors, generate a new tree from the index and commit</li>
-                    </ol>
+                    <div style="position: relative; top: -100px">
+                        <p style="font-size: 200%"><span class="bash"> git merge <i>rev</i> </span></p>
+                        <p>The process:</p>
+                        <ol style="width: 80%; font-size: 120%; line-height: 1.5">
+                            <li>The trees of both parents are examined, finding their common parent
+                                <ul>
+                                    <li>Identical trees/blobs (both hashes of are the same) are added to the Index</li>
+                                    <li>A consistency check is done from their common parent to detect if both have added or removed files</li>
+                                    <li>Perform three-way merges on changes, creating new blobs and adding their hashes to the Index</li>
+                                </ul>
+                            </li>
+                            <li>Generate a new tree from the Index and commit</li>
+                        </ol>
+                    </div>
                 </section>
 
 
-
                 <section class="dag_merge_start">
-                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge BR2</span>
-</div>
+                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge BR2</span></div>
                     <img src="images/merge_start_dag.png" class="dag-img" style="height: 500px; "/>
                 </section>
 
@@ -604,8 +750,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
 
                 <section class="dag_merge_ours_question">
-                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge -s ours BR2</span>
-</div>
+                    <div class="bash" style="font-size: 120%; ">$ <span class="bash">git merge -s ours BR2</span></div>
                     <img src="images/merge_start_dag.png" class="dag-img" style="height: 500px; "/>
                 </section>
 
@@ -659,7 +804,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                         <div class="bash">$ <span class="bash">git merge b1</span></div>
 
-                        <div class="graph after">
+                        <div class="graph after fragment">
                             <div class="node1">
                                 <div class="tag left">t1</div>
                                 <div class="branch left">b1</div>
@@ -712,28 +857,25 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                 <section>
                     <h2>Rebase</h2>
-                    <p>A series of cherry-picks are computed and applied to a new "base."</p>
+                    <p>A series of cherry-picks are computed and applied to a new "base"</p>
                 </section>
 
 
 
                 <section>
-                    <h3>The process:</h3>
-                    <ol style="width: 50%; ">
-                        <li>find all the commits that are pointed to
-                            <ul>
-                                <li>For example, <span class="bash"> git rebase b1 </span> would take all of the commits on the current branch until it reaches a common ancestor with "b1"</li>
-                            </ul>
-                        </li>
-                        <li>update HEAD to the new base ("detaching" it)</li>
-                        <li>for each changeset/cherry-pick...
-                            <ol>
-                                <li>apply the cherry-pick to HEAD</li>
-                                <li>move HEAD to the newly created commit</li>
-                            </ol>
-                        <li>update the branch's head to the latest commit</li>
-                        <li>repoint the HEAD to the branch</li>
-                    </ol>
+                    <div style="position: relative; top: -100px">
+                        <p style="font-size: 200%"><span class="bash"> git rebase <i>rev</i> </span></p>
+                        <p>The process:</p>
+                        <ol style="width: 80%; font-size: 150%; line-height: 1.5">
+                            <li>Find all the commits in the current branch until it gets to a the common ancestor with <code>rev</code></li>
+                            <li>update HEAD to the new base ("detaching" it)</li>
+                            <li>for (patch in changeset)
+                                <ul>
+                                    <li>apply the cherry-pick to HEAD and move HEAD to the newly created commit</li>
+                                </ul>
+                            <li>Update the branch's head and repoint the HEAD to the branch</li>
+                        </ol>
+                    </div>
                 </section>
 
 
@@ -780,7 +922,7 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
 
                         <div class="bash">$ <span class="bash">git rebase b1</span></div>
 
-                        <div class="graph after">
+                        <div class="graph after fragment">
                             <div class="node1">
                                 <div class="tag left">t1</div>
                                 <div class="branch left">b1</div>
@@ -852,9 +994,24 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 </section>
 
 
+                <section>
+                    <h1>Conclusion</h1>
+                </section>
+
+
+
+                <section data-background="images/epic_pony.jpg">
+                    <h2 style="opacity: 1.0; background-color: white">Simplicity Brings Power</h2>
+                    <p>&nbsp;</p>
+                    <p style="opacity: 1.0; background-color: white">Trivial data structures and a few simple architectural principles<br/>
+                        (DAG, immutable, plumbing vs porcelain) provide an extremely rich,<br/>fast, flexible and easily customizable tool</p>
+                </section>
+
+
 
                 <section class="QnA">
                     <h1>Q &amp; A</h1>
+                    <img style="opacity: 0.7; height: 500px;" src="images/not_ready_for_questions.png"/>
                 </section>
 
 
@@ -862,8 +1019,9 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section class="references">
                     <h3>References</h3>
 
-                    <ul style="width: 75%; ">
-                        <li>Git Internals - Git Objects <a href="http://git-scm.com/book/en/Git-Internals-Git-Objects">http://git-scm.com/book/en/Git-Internals-Git-Objects</a></li>
+                    <ul style="width: 50%; ">
+                        <li><a href="http://git-scm.com/book/en/Git-Internals-Git-Objects">Git Internals - Git Objects</a></li>
+                        <li><a href="http://www.gitguys.com/topics/whats-the-deal-with-the-git-index/">What’s The Deal With The Git Index?</a></li>
                         <li><a href="http://git-scm.com/2011/07/11/reset.html">Reset Demystified</a></li>
                         <li><a href="http://www.infoq.com/presentations/Simple-Made-Easy">"Simple Made Easy"</a> - Rich Hickey's classic on the vital distinction between "simple" and "easy"</li>
                     </ul>
@@ -874,9 +1032,19 @@ e0012413fb1c0728dc1d9b86c9b074dfc24a220a</div>
                 <section class="attribution">
                     <h3>Photo Attribution</h3>
 
-                    <ul style="width: 75%; ">
-                        <li>plumbing - <a href="http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG">http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG</a></li>
-                        <li>sink - <a href="http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/">http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/</a></li>
+                    <ul style="width: 50%; ">
+                        <li>Cool Rainbow Dash - <a href="http://chano-kun.deviantart.com/art/Cool-Dash-272499932">Vexorb on DeviantArt</a></li>
+                        <li>Linus Torvalds - <a href="https://commons.wikimedia.org/wiki/File:LinuxCon_Europe_Linus_Torvalds_03.jpg">Wikimedia Commons</a></li>
+                        <li>plumbing - <a href="http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG">Wikimedia Commons</a></li>
+                        <li>sink - <a href="http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/">Pixabay.com</a></li>
+                        <li>I Got A Fever - <a href="http://asylumactas.deviantart.com/art/More-Cowbell-194241861"></a>AsylumActas on DeviantArt</li>
+                        <li>More Cowbell GIF - <a href="http://gifsoup.com/view/4392785/more-cowbell.html">GIFSoup</a></li>
+                        <li>Arrow in the Gold - <a href="https://openclipart.org/detail/20596/arrow-in-the-gold"></a>OpenClipart</li>
+                        <li>Raindow Dash with Armor Commander Hurricane - <a href="http://pegasi-pony.deviantart.com/art/Raindow-Dash-with-Armor-Commander-Hurricane-Vector-274592028"></a>Pegasi-pony on DeviantArt</li>
+                        <li>Ugh As If - <a href="http://www.redbubble.com/people/pearl-paradise/works/13633522-ugh-as-if">RedBubble</a></li>
+                        <li>Same and Different Ponies - <a href="http://www.mtv.com/news/2625537/my-little-pony-toy-review/">MTV</a></li>
+                        <li>Epic Ponies - <a href="https://imgur.com/gallery/4QeW49x">Imgur - Bropez</a></li>
+                        <li>Not Ready - <a href="https://derpibooru.org/1043076">Derpibooru.org</a>
                     </ul>
                 </section>
 

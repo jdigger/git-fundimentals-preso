@@ -31,6 +31,62 @@ div.note {
   background: none;
   height: 700px; }
 
+img.got-a-fever {
+  position: absolute;
+  height: 200px;
+  top: 400px;
+  left: 1500px; }
+
+.reveal section.toc ol {
+  line-height: 1.5;
+  width: 60%;
+  font-size: 150%;
+  position: relative;
+  top: -150px;
+  left: 250px; }
+.reveal section.toc img {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 500px; }
+
+.reveal section.linus img {
+  border: none;
+  box-shadow: none;
+  background: none;
+  top: -150px;
+  position: relative; }
+
+.reveal section div.data-integrity {
+  top: -50px;
+  position: relative; }
+  .reveal section div.data-integrity img.rainbow-dash-armor {
+    border: none;
+    box-shadow: none;
+    background: none;
+    height: 200px; }
+
+.reveal section.present img {
+  border: none;
+  box-shadow: none;
+  background: none; }
+
+.reveal section img.ugh-as-if {
+  border: none;
+  box-shadow: none;
+  background: none;
+  top: -150px;
+  height: 600px;
+  position: relative; }
+
+.reveal section.more-cowbell img {
+  border: none;
+  box-shadow: none;
+  background: none;
+  top: -150px;
+  height: 850px;
+  position: relative; }
+
 div.bash, span.bash {
   font-family: monospace;
   white-space: pre;
