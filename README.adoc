@@ -1,0 +1,16 @@
+# Purpose
+
+A presentation on how git is "simple", and its implications.
+
+To view, either download the source and open `index.html` in a HTML5 web browser, or go to https://jdigger.github.io/git-fundimentals-preso/
+
+# Uses
+
+* http://markdalgleish.com/projects/bespoke.js/[Bespoke], a framework for easily creating beautiful presentations using HTML.
+* https://github.com/asciidoctor/asciidoctor-bespoke[Asciidoctor Bespoke]
+* http://graphviz.org/[graphviz] for creating charts
+
+## Licenses
+
+* The presentation content is [CC Attribution 4.0 licensed](http://creativecommons.org/licenses/by/4.0/), Copyright (C) 2014-16 Jim J. Moore
+* Bespoke.js is MIT licensed
