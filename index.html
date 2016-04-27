@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Git Made Simple</title><meta name="author" content="Jim Moore"><meta name="generator" content="Asciidoctor 1.5.4 (Bespoke.js converter)"><meta name="mobile-web-app-capable" content="yes"><link rel="stylesheet" href="build/build.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"></head><body><article class="deck"><section class="title" data-title=""><h1>Git Made Simple</h1><p>How Git Does Its Magic</p>
+<div class="smaller"><p>Created by <a href="https://github.com/jdigger/">Jim Moore</a></p>
+<p><a href="https://keybase.io/jmoore">keybase.io/jmoore</a> / <a href="http://twitter.com/jdiggerj">@jdiggerj</a></p></div>
+<figure class="image git-logo"><img src="images/Git-Logo-2Color.png" alt="Git Logo 2Color"></figure>
+<br/><br/><div class="content" style="display: flex; text-align: center;"><p style="font-size: 0.6em"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Git Made Simple</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/git-fundimentals-preso" rel="dct:source">https://github.com/jdigger/git-fundimentals-preso</a></p></div><footer><p class="author"><span class="personname"><span class="firstname">Jim</span> <span class="surname">Moore</span></span><span class="contact"><span class="twitter">@jdiggerj</span> </span></p></footer></section>
+<section><div class="toc"><p><span class="image"><img src="images/cool_dash_by_vexorb-d4i8mak.png" alt="cool dash by vexorb d4i8mak"></span></p>
+<ol><li><span class="primary">Naming Things</span></li><li><span class="primary">Blobs, Trees and Commits</span></li><li><span class="primary">Hash Trees</span></li><li><span class="primary">Immutable DAG Benefits</span></li><li><span class="primary">Performance and Cleanliness</span></li><li><span class="primary">The Index</span></li><li><span class="primary">References</span></li><li><span class="primary">Add/Commit/Checkout/Cherry-Pick</span></li><li><span class="primary">Merge/Rebase</span></li></ol></div></section>
+<section><figure class="image fullheight center"><img src="images/LinuxCon_Europe_Linus_Torvalds_03.jpg" alt="LinuxCon Europe Linus Torvalds 03"></figure></section>
+<section><h2>Create A Repo</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ mkdir gittemp; cd gittemp
+$ git init
+$ git config user.name "Git Fundamentals"
+$ git config user.email "gitfund@git.com"</code></pre></div></section>
+<section><h2>Create Some Content</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ echo "Some cowbell" &gt; file1.txt
+$ echo "Just some file2 data" &gt; file2.txt
+$ mkdir morefiles
+$ cp file1.txt morefiles/file3.txt</code></pre>
+<aside><p>At this point we now have two identical files and another different file</p></aside></div>
+<p class="got-a-fever"><span class="image"><img src="images/more_cowbell_by_asylumactas-d37n9z9.jpg" alt="more cowbell by asylumactas d37n9z9" height="150"></span></p></section>
+<section><h2>What&#8217;s in a name?</h2><p>Names are important&#8230;&#8203;</p>
+<aside role="note"><p>There are names, and then there are NAMES.</p>
+<p>"Jim" is a great name. Doesn&#8217;t tell you much about me, but is "generally" useful for identifying me distinctly from others in a room.</p>
+<p>"Jim Moore" is even better. Not only does it further decrease the likelihood that there will be others with the same name in a room, it also tells you a bit about my ancestory. (From the moors of Ireland.) Though at one point in my career there were four "Jim Moore"s in the same company, and my office was right next door to one of the other Jim Moores: a really cool guy that was under five feet and black as night&#8201;&#8212;&#8201;which is not me, even though HR and Accounting would constantly confuse us since we were even in the same department.</p>
+<p>Wouldn&#8217;t it be cooler if we still did names like they did in the medival period based on more INHERENT qualities? Maybe mine would be "Jim the Byte-Binder of Denver, eldest of James the Shapesmaster and Judy the Wise." Now THAT would be a name less likely to be duplicated&#8230;&#8203;</p></aside></section>
+<section><h2>How do we want to identify the content we just created?</h2><ul><li><span class="primary">We want some way to keep track of content <strong><em>and</em></strong> know when that content has <em>changed</em>.</span></li><li><span class="primary"><em>Ideally</em> in a way where that name/identifier would survive context shifts (such as being copied)</span></li></ul></section>
+<section><ul class="build"><li><span class="primary">File name?</span></li><li><span class="primary">File name (<a href="https://en.wikipedia.org/wiki/Uniform_Resource_Name">URN</a>?) and modification time?</span></li><li><span class="primary">A self-incrementing revision number?</span></li></ul>
+<p><span class="image build-items"><img src="images/ugh-as-if.png" alt="ugh as if"></span></p></section>
+<section><h2>Solution</h2><p>We&#8217;re going to give it a name based on its <strong><em>content</em></strong> rather than something effectively random.</p></section>
+<section><p><a href="https://en.wikipedia.org/wiki/Hash_function"><strong>Hash function</strong></a>&#8201;&#8212;&#8201;any function that can be used to map data of arbitrary size to data of fixed size.</p>
+<p><span class="image"><img src="images/SnarkHunter-Arrow-in-the-gold.svg" alt="SnarkHunter Arrow in the gold" width="200"></span></p></section>
+<section><h2>Naming the Content</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git hash-object file1.txt</strong>
+77bd771f7fefc66994a22d922cad923ae068675a
+
+$ <strong>git hash-object file2.txt</strong>
+63ffb2bff74e9161a82b82999718f441df6a68f1
+
+$ <strong>git hash-object morefiles/file3.txt</strong>
+77bd771f7fefc66994a22d922cad923ae068675a</code></pre>
+<aside><ul><li><span class="primary">The hash uses <a href="https://en.wikipedia.org/wiki/SHA-1">the SHA-1 algorithm</a>, producing a 160 bit (40 hex characters) representation of the data</span></li><li><span class="primary">Hashes for <strong><em>exactly</em></strong> the same content are the same; for different content (even a single bit) the hash is radically different</span></li></ul></aside></div></section>
+<section><p><span class="image left"><img src="images/plumbing.jpg" alt="plumbing"></span>
+<span class="image right"><img src="images/sink.jpg" alt="sink"></span></p></section>
+<section><h2>Identify What Should be Saved To The Repository</h2><div class="identify-to-repository"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git add file1.txt file2.txt morefiles/file3.txt</strong>
+
+$ <strong>git ls-files --stage</strong>
+100644 77bd771f7fefc66994a22d922cad923ae068675a 0	file1.txt
+100644 63ffb2bff74e9161a82b82999718f441df6a68f1 0	file2.txt
+100644 77bd771f7fefc66994a22d922cad923ae068675a 0	morefiles/file3.txt</code></pre>
+<aside><ul><li><span class="primary"><code>ls-files</code> shows what is being tracked; it is the pluming for <code>status</code></span></li><li><span class="primary">Nothing has been saved to the repository yet: We have merely identified what files&#8201;&#8212;&#8201;and at what state&#8201;&#8212;&#8201;should be saved</span></li></ul></aside></div></section>
+<section><h2>Save To The Repository</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git commit -m "First good version"
+[master (root-commit) 3b1b4ff] First good version
+3 files changed, 3 insertions(+)
+create mode 100644 file1.txt
+create mode 100644 file2.txt
+create mode 100644 morefiles/file3.txt&lt;/div&gt;</code></pre>
+<aside><ul><li><span class="primary">Because this is the first commit, it doesn&#8217;t have a parent</span></li><li><span class="primary">The "id" for the commit starts with "3b1b4ff"</span><ul><li><span class="primary">It&#8217;s actually "3b1b4ff08b048aceeb4ccb38739101ec94b8fd01", as we&#8217;ll see later</span></li><li><span class="primary">The first seven characters are usually enough to make it unique, so it&#8217;s often shortened to that</span></li></ul></li></ul></aside></div></section>
+<section><h2>Inspecting the Commit</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git cat-file -p 3b1b4ff
+tree 0550b757d5b412ab40416d2c7ede1313d1c38087
+author Git Fundamentals &lt;gitfund@git.com&gt; 1409711557 -0600
+committer Git Fundamentals &lt;gitfund@git.com&gt; 1409711557 -0600
+
+First good version</code></pre></div></section>
+<section><h2>The commit fields</h2><div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+tree
+</td>
+<td class="hdlist2">
+<p>id of the object that contains the file tree structure</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+parent(s)
+</td>
+<td class="hdlist2">
+<p>0..n ids to the parents of this commit. Most commits will have one parent; most merges will have two, though can have any number of parents; this is the first so it has none</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+author
+</td>
+<td class="hdlist2">
+<p>the author (name and email) with when it was initially committed</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+committer
+</td>
+<td class="hdlist2">
+<p>the committer; usually the author, but can be different for author attribution reasons</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+message
+</td>
+<td class="hdlist2">
+<p>a description of why this change was saved</p>
+</td>
+</tr>
+</table>
+</div></section>
+<section><h2>Inspecting the Tree</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git cat-file -p 0550b75</strong>
+100644 blob 77bd771f7fefc66994a22d922cad923ae068675a  file1.txt
+100644 blob 63ffb2bff74e9161a82b82999718f441df6a68f1  file2.txt
+040000 tree cb63181eaa27bf4caedf9d9d212840206a77c11d  morefiles
+
+$ <strong>git cat-file -p cb63181</strong>
+100644 blob 77bd771f7fefc66994a22d922cad923ae068675a  file3.txt
+
+$ <strong>git cat-file -p 77bd771</strong>
+Some cowbell</code></pre>
+<aside><p>Shows the unix file mask, the type (blob/tree), the SHA-1 of the entry, and the name.</p>
+<p>Subdirectories are simply other tree objects.</p></aside></div></section>
+<section><h2>On the Filesystem</h2><div class="git-filesystem"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>find .git/objects -type f</strong>
+.git/objects/05/50b757d5b412ab40416d2c7ede1313d1c38087 # <strong>tree - top of commit 1</strong>
+.git/objects/3b/1b4ff08b048aceeb4ccb38739101ec94b8fd01 # <strong>commit 1 - "First good version"</strong>
+.git/objects/63/ffb2bff74e9161a82b82999718f441df6a68f1 # <strong>blob - file2.txt</strong>
+.git/objects/77/bd771f7fefc66994a22d922cad923ae068675a # <strong>blob - file1.txt &amp; file3.txt</strong>
+.git/objects/cb/63181eaa27bf4caedf9d9d212840206a77c11d # <strong>tree - "morefiles" subdir under
+                                                                top tree of commit 1</strong>
+
+$ <strong>cat .git/HEAD</strong>
+ref: refs/heads/master
+
+$ <strong>cat .git/refs/heads/master</strong>
+3b1b4ff08b048aceeb4ccb38739101ec94b8fd01</code></pre>
+<aside><p>The first two digits are used to create subdirectories to avoid filesystem problems when you have thousands of files in a directory.</p>
+<p>Most of the porcelain works with <code>HEAD</code>.</p></aside></div></section>
+<section><p><span class="image"><img src="images/dag01.png" alt="dag01"></span></p></section>
+<section><p><span class="image"><img src="images/more-cowbell_4392785_GIFSoup.com.gif" alt="more cowbell 4392785 GIFSoup.com" height="720"></span></p></section>
+<section><h2>Change File1.txt</h2><div class="change-file1"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>echo "More cow-bell\!" &gt; file1.txt</strong>
+
+$ <strong>git commit -am "Added more cow-bell."</strong>
+[master 7581387] Added more cow-bell.
+1 file changed, 1 insertion(+), 1 deletion(-)
+
+$ <strong>git cat-file -p 7581387</strong>
+tree 366612747e1b0730cdbb680bb48ba6132b321848
+parent 3b1b4ff08b048aceeb4ccb38739101ec94b8fd01
+author Git Fundamentals &lt;gitfund@git.com&gt; 1409885160 -0600
+committer Git Fundamentals &lt;gitfund@git.com&gt; 1409885160 -0600
+
+$ <strong>git cat-file -p 3666127</strong>
+100644 blob faff7b9f491fea306a748f2e17e536918fb6a601  file1.txt
+100644 blob 63ffb2bff74e9161a82b82999718f441df6a68f1  file2.txt
+040000 tree cb63181eaa27bf4caedf9d9d212840206a77c11d  morefiles</code></pre></div></section>
+<section><p><span class="image"><img src="images/dag02.png" alt="dag02"></span></p></section>
+<section><h2>Rename Files</h2><div class="rename-files"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>mv file2.txt wow.txt ; mv morefiles hasfiles</strong>
+$ <strong>git add -A &amp;&amp; git commit -m "Renamed files"</strong>
+[master e001241] Renamed files
+2 files changed, 0 insertions(+), 0 deletions(-)
+rename {morefiles =&gt; hasfiles}/file3.txt (100%)
+rename file2.txt =&gt; wow.txt (100%)
+
+$ <strong>git cat-file -p e001241</strong>
+tree 96996c4fd8813d8854ebeee54d753115cb8a880f
+parent 758138729b824c8aabecff1a961202f8fd7d50df
+author Git Fundamentals &lt;gitfund@git.com&gt; 1409888276 -0600
+committer Git Fundamentals &lt;gitfund@git.com&gt; 1409888276 -0600
+
+Renamed files
+
+$ <strong>git cat-file -p 96996c4f</strong>
+100644 blob faff7b9f491fea306a748f2e17e536918fb6a601  file1.txt
+040000 tree cb63181eaa27bf4caedf9d9d212840206a77c11d  hasfiles
+100644 blob 63ffb2bff74e9161a82b82999718f441df6a68f1  wow.txt</code></pre></div></section>
+<section><p><span class="image"><img src="images/dag03.png" alt="dag03"></span></p></section>
+<section><h2>The Power of Guarantees</h2><p>Because each object&#8217;s content has a pointer to the one below, a change in a sub-object guarantees that the hash for the parent will be different</p></section>
+<section><h2>Merkle Trees</h2><p>For the developers/computer-science people, this is an extremely well-proven technique known as a <a href="https://en.wikipedia.org/wiki/Merkle_tree">hash tree (a.k.a. Merkle tree)</a></p>
+<p>Instead of using pointers comprised of memory addresses, it uses pointers using a unique "name" based upon the referenced value&#8217;s <strong><em>contents</em></strong></p></section>
+<section><p><span class="image rainbow-dash-armor"><img src="images/raindow_dash_with_armor_vector_by_pegasi_pony-d4jhgkc.png" alt="raindow dash with armor vector by pegasi pony d4jhgkc"></span></p>
+<p>It is used as a highly efficient way to guarantee data integrity for everything from filesystems and databases (e.g., <a href="http://open-zfs.org/wiki/Main_Page">ZFS</a>, <a href="https://github.com/basho/riak">Riak</a>, <a href="https://cassandra.apache.org/">Casandra</a>) to peer-to-peer data transfer (e.g., <a href="http://www.bittorrent.com/">BitTorrent</a>) to currencies (e.g., <a href="https://bitcoin.org/en/">Bitcoin</a>)</p></section>
+<section><h2>Direction of the Arrows</h2><p>The DAG (Directed Acyclic Graph) based on hashes is what makes it possible for git to be fully distributed</p>
+<ul><li><span class="primary">Blobs are shared between Trees</span></li><li><span class="primary">Trees are shared among Commits</span></li><li><span class="primary">Commits are shared among References</span></li></ul></section>
+<section><p><span class="image"><img src="images/same_different_ponies.jpg" alt="same different ponies"></span></p>
+<p>Because identical content hashes to the same thing, and you have all of the content all of the time, it&#8217;s trivial to do the consistency checks needed to know <strong>exactly</strong> <em>where, when and how</em> content diverged</p>
+<p>This is true <strong>even among systems with no communication between them</strong></p>
+<p>There is no need to know how you&#8217;re going to want to slice-n-dice that information ahead of time</p></section>
+<section><h2>Moving Files</h2><p>It &#8220;noticed&#8221; that we renamed the file and directory&#8230;&#8203;</p>
+<p>How, since nothing in the data-structures recorded that?</p>
+<p><a href="http://stackoverflow.com/questions/7938582/how-does-git-detect-similar-files-for-its-rename-detection">Some of the porcelain uses rename detection</a> based on configurable sensitivity.</p>
+<p>Because it&#8217;s easily detectable at runtime, some of the porcelain, such as <span class="source bash">git blame -M</span> can show how individual lines have moved around between files.</p></section>
+<section><h2>Not Storing Deltas or Patches?</h2><p>Each file, as we saw before, is a &#8220;complete blob&#8221; in git&#8217;s object store</p></section>
+<section><h2>Constant Time</h2><p>Notice that navigating between revisions is an O(1) operation</p>
+<p>Writing to the repository is extremely fast: no matter how many files there are, it&#8217;s just enough time to calculate the SHA-1s of the new content, zlib compress it, and copy just that new content into the object store</p></section>
+<section><h2>Reading vs Writing</h2></section>
+<section><h2>Packing and Garbage Collection</h2><div class="pack-gc"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git gc</strong>
+Counting objects: 7, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (7/7), done.
+Total 7 (delta 0), reused 0 (delta 0)
+
+$ <strong>find .git/objects -type f</strong>
+.git/objects/info/packs
+.git/objects/pack/pack-4aaa8775b3535f0f7ae44215272d423d924ee3fa.idx
+.git/objects/pack/pack-4aaa8775b3535f0f7ae44215272d423d924ee3fa.pack</code></pre></div></section>
+<section><h2>The Index</h2><p>The portal between the working-directory and the repository</p></section>
+<section><h2>Use Cases</h2><ul><li><span class="primary">Want to be able to add some files but not all to a specific commit.</span></li><li><span class="primary">Want to be able to add some parts of a file to a commit, but not others.</span></li><li><span class="primary">Want to be able to &#8220;move&#8221; the commit pointer without affecting the files in the working directory.</span><ul><li><span class="primary">&#8220;Oops, I didn&#8217;t mean to commit the password file. Let&#8217;s try that again.&#8221;</span></li><li><span class="primary">&#8220;Oops. I had a typo in the commit message.&#8221;</span></li><li><span class="primary">&#8220;Oops&#8230;&#8203;&#8221;</span></li><li><span class="primary">Improving the readability/understandability of the project&#8217;s history</span></li><li><span class="primary">A desire to project the illusion of undeserved competence</span></li></ul></li></ul></section>
+<section><figure class="quote"><blockquote><p>All problems in computer science can be solved by another level of indirection.</p></blockquote></figure>
+<p>&#8201;&#8212;&#8201;David Wheeler, <a href="http://www.dmst.aueb.gr/dds/pubs/inbook/beautiful_code/html/Spi07g.html">Beautiful Code</a></p></section>
+<section><p>Thus, instead of just the Working Directory and the Repository, there is also the <strong>Index</strong></p>
+<p>(a.k.a. the Dir Cache, Staging Area, etc.)</p></section>
+<section><h2>Lifecycle</h2><p>Working directory &#8594; Index &#8594; Tree &#8594; Commit</p></section>
+<section><h2>Manipulating the Index</h2><ul><li><span class="primary"><span class="source bash">git add file</span> and <span class="source bash">git rm file</span> - adds and removes files from the index</span></li><li><span class="primary"><span class="source bash">git add -p file</span> - add a &#8220;patch&#8221; from this file, allowing selection of specific pieces of the file and not the whole thing</span><ul><li><span class="primary">While this can be done at the command line, this is really something that a graphical tool like <a href="http://www.sourcetreeapp.com/">SourceTree</a> makes <strong><em>much</em></strong> easier</span></li></ul></li><li><span class="primary"><span class="source bash">git reset HEAD~1</span> - move the index to what it looked like before the last commit, but leave the files as they were (i.e., &#8220;forget&#8221; that <span class="source bash">git commit</span> happened)</span></li><li><span class="primary"><span class="source bash">git reset --hard HEAD</span> - move the index <strong>and</strong> filesystem to what it looked like at the last commit (very commonly done to toss away every that&#8217;s been done since the last commit because of a bad rabbit trail)</span></li></ul></section>
+<section><figure class="image"><img src="images/sourcetree_stage_lines.png" alt="sourcetree stage lines"></figure></section>
+<section><h2>References</h2></section>
+<section><h2>Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git tag aTag
+
+$ cat .git/refs/tags/aTag
+e0012413fb1c0728dc1d9b86c9b074dfc24a220a
+
+$ git cat-file -t e001241
+commit</code></pre></div></section>
+<section><h2>Annotated Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git tag -a annTag -m "annotated tag here"
+
+$ cat .git/refs/tags/annTag
+85aca4362a29ddb70a70c6d6f882d4c1e04b2eb3
+
+$ git cat-file -t 85aca43
+tag
+
+$ git cat-file -p 85aca43
+object e0012413fb1c0728dc1d9b86c9b074dfc24a220a
+type commit
+tag annTag
+tagger Git Fundamentals &lt;gitfund@git.com&gt; 1410039830 -0600
+
+annotated tag here</code></pre></div></section>
+<section><h2>Branches</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ cat .git/refs/heads/master
+e0012413fb1c0728dc1d9b86c9b074dfc24a220a</code></pre></div>
+<p>The big difference between branches and tags is that the value in that file <strong><em>will change</em></strong> over time during a normal workflow. (i.e., As you make changes to the branch.)</p></section>
+<section><h2>Mutability</h2></section>
+<section><p><strong>The contents of &#8220;objects&#8221; can never change.</strong></p>
+<p><strong>Period.</strong></p></section>
+<section><p>Changing an object changes its hash, thereby guaranteeing consistency</p></section>
+<section><p>&#8220;References&#8221; may change, which is why they don&#8217;t have a hash</p></section>
+<section><h2>HEAD</h2><p>&#8220;HEAD&#8221; (.git/HEAD) is not really a &#8220;reference&#8221;</p>
+<p>It&#8217;s used as part of the porcelain to keep track of where the &#8220;user&#8221; is</p></section>
+<section><figure class="image detached-head"><img src="images/mlp_10detached_parts_dried1.jpg" alt="mlp 10detached parts dried1"></figure>
+<p>A &#8220;detached HEAD&#8221; is simply a HEAD that points to a specific commit instead of a branch</p></section>
+<section><h2>Revision IDs</h2><p><a href="http://stackoverflow.com/questions/23303549/what-are-commit-ish-and-tree-ish-in-git">A great explanation on Stackoverflow.</a></p>
+<p>Some primary examples:</p>
+<div class="dlist revids">
+<dl>
+<dt class="hdlist1">sha1</dt>
+<dd>
+<p>a specific hash reference</p>
+</dd>
+<dt class="hdlist1">refname</dt>
+<dd>
+<p>branch name, tag, HEAD, etc.</p>
+</dd>
+<dt class="hdlist1">rev^</dt>
+<dd>
+<p>the parent of the commit</p>
+<ul><li><span class="primary">&#8220;master^&#8221; is the parent of the commit pointed to by the head of &#8220;master&#8221;</span></li></ul>
+</dd>
+<dt class="hdlist1">rev~<em>n</em></dt>
+<dd>
+<p>the n<sup>th</sup> parent of the commit.</p>
+<ul><li><span class="primary">"HEAD~1" is the parent of the commit pointed to by HEAD</span></li><li><span class="primary">"HEAD~5" goes back five commits before the current one</span></li></ul>
+</dd>
+</dl>
+</div></section>
+<section><h2>Applying Changes</h2></section>
+<section><p><span class="source bash">git add _filename_</span></p>
+<p>The process:</p>
+<ol><li><span class="primary">Compare the working-directory hash of the file to what is in the index</span></li><li><span class="primary">If the hashes are different, copy the file into the object store as a new blob</span></li><li><span class="primary">Record the hash for the file in the Index (a.k.a., &#8220;tree builder&#8221;)</span></li></ol>
+<p><span class="image agent-oso"><img src="images/agent_oso.png" alt="agent oso"></span></p></section>
+<section><p><span class="source bash">git commit -m "_message_"</span></p>
+<p>The process:</p>
+<ol><li><span class="primary">Write the Index out as a tree object</span></li><li><span class="primary">Create a commit object that has the tree&#8217;s hash and meta-data (author, date, comment, etc.)</span></li><li><span class="primary">Update the head of the branch pointed to by HEAD</span></li></ol></section>
+<section><p><span class="source bash">git checkout _branchname_</span></p>
+<p>The process:</p>
+<ol><li><span class="primary">Replace the Index with the tree for the commit</span></li><li><span class="primary">Update the local filesystem to match the Index</span></li><li><span class="primary">Change HEAD to point to the branch</span></li></ol></section>
+<section><p><span class="source bash">git cherry-pick _rev_</span></p>
+<p>The process:</p>
+<ol><li><span class="primary"><span class="source bash">git diff -C _rev_~1 _rev_</span> &#8594; patch</span></li><li><span class="primary">Apply patch to the current HEAD</span></li><li><span class="primary">Create a new commit, copying over the metadata (such as &#8220;author&#8221;) from the cherry-picked commit</span></li></ol></section>
+<section><h2>Merging and Rebasing</h2></section>
+<section><h2>Merge</h2><p>A new commit object is created with two parents</p>
+<p>(more parents are possible, but don&#8217;t do it)</p></section>
+<section><p><span class="source bash">git merge _rev_</span></p>
+<p>The process:</p>
+<ol><li><span class="primary">The trees of both parents are examined, finding their common parent</span><ul><li><span class="primary">Identical trees/blobs (both hashes of are the same) are added to the Index</span></li><li><span class="primary">A consistency check is done from their common parent to detect if both have added or removed files</span></li><li><span class="primary">Perform three-way merges on changes, creating new blobs and adding their hashes to the Index</span></li></ul></li><li><span class="primary">Generate a new tree from the Index</span></li><li><span class="primary">Create Commit</span></li></ol></section>
+<section><p><span class="source bash">git merge BR2</span></p>
+<figure class="image"><img src="images/merge_start_dag.svg" alt="merge start dag"></figure></section>
+<section><figure class="image"><img src="images/merge_dag.svg" alt="merge dag"></figure></section>
+<section><p><span class="source bash">git merge -s ours BR2</span></p>
+<figure class="image"><img src="images/merge_start_dag.svg" alt="merge start dag"></figure></section>
+<section><figure class="image"><img src="images/merge_ours_dag.svg" alt="merge ours dag"></figure></section>
+<section class="git-merge-b1"><h2>git merge b1</h2><div class="2col"><figure class="image merge-branch-1"><img src="images/merge-branches-1.svg" alt="merge branches 1"></figure>
+<figure class="image merge-branch-2"><img src="images/merge-branches-2.svg" alt="merge branches 2"></figure></div></section>
+<section><h2>Rebase</h2><p>A series of cherry-picks are computed and applied to a new &#8220;base&#8221;</p></section>
+<section><p><span class="source bash">git rebase _rev_</span></p>
+<p>The process:</p>
+<ol><li><span class="primary">Find all the commits in the current branch until it gets to a the common ancestor with <em>rev</em></span></li><li><span class="primary">Update HEAD to the new base (&#8220;detaching&#8221; it)</span></li><li><span class="primary">for (patch in changeset)</span><ul><li><span class="primary">apply the cherry-pick to HEAD and move HEAD to the newly created commit</span></li></ul></li><li><span class="primary">Update the branch&#8217;s head and repoint the HEAD to the branch</span></li></ol></section>
+<section class="git-rebase-b1"><h2>git rebase b1</h2><div class="2col"><figure class="image rebase-branch-1"><img src="images/rebase-branches-1.svg" alt="rebase branches 1"></figure>
+<figure class="image rebase-branch-2"><img src="images/rebase-branches-2.svg" alt="rebase branches 2"></figure></div></section>
+<section><h2>Interactive Rebase</h2><p>Using the "-i" flag allows you to "step into" the cherry-pick process</p>
+<p>You can:</p>
+<ul><li><span class="primary">pick which commits to use, including reordering or discarding specific commits</span></li><li><span class="primary">edit the commit message of a commit</span></li><li><span class="primary">pause while cherry-picking to allow editing the commit (such as breaking one commit into multiple commits, or removing mistakingly committed testing config or a sensitive file)</span></li><li><span class="primary">&#8220;squash&#8221; a commit into a previous commit, merging them together</span></li></ul></section>
+<section><h2>Conclusion</h2></section>
+<section class="simplicity-power image" style="background-image: url(images/epic_pony.jpg); background-size: contain; background-repeat: no-repeat"><h2>Simplicity Brings Power</h2>
+<p>Trivial data structures and a few simple architectural principles (DAG, immutable, plumbing vs porcelain) provide an extremely rich, fast, flexible and easily customizable tool</p></section>
+<section><h2>Q &amp; A</h2><figure class="image"><img src="images/not_ready_for_questions.png" alt="not ready for questions" height="300px"></figure></section>
+<section><h2>References</h2><ul><li><span class="primary"><a href="http://git-scm.com/book/en/Git-Internals-Git-Objects">Git Internals - Git Objects</a></span></li><li><span class="primary"><a href="http://www.gitguys.com/topics/whats-the-deal-with-the-git-index/">What’s The Deal With The Git Index?</a></span></li><li><span class="primary"><a href="http://git-scm.com/2011/07/11/reset.html">Reset Demystified</a></span></li><li><span class="primary"><a href="http://www.infoq.com/presentations/Simple-Made-Easy">&#8220;Simple Made Easy&#8221;</a> - Rich Hickey&#8217;s classic on the vital distinction between &#8220;simple&#8221; and &#8220;easy&#8221;</span></li></ul></section>
+<section><h2>Photo Attribution</h2><ul class="photo-attribution"><li><span class="primary">Cool Rainbow Dash - <a href="http://chano-kun.deviantart.com/art/Cool-Dash-272499932">Vexorb on DeviantArt</a></span></li><li><span class="primary">Linus Torvalds - <a href="https://commons.wikimedia.org/wiki/File:LinuxCon_Europe_Linus_Torvalds_03.jpg">Wikimedia Commons</a></span></li><li><span class="primary">plumbing - <a href="http://en.wikipedia.org/wiki/Piping_and_plumbing_fitting#mediaviewer/File:Robinetterie-raccords.JPG">Wikimedia Commons</a></span></li><li><span class="primary">sink - <a href="http://pixabay.com/en/sink-bowl-faucet-porcelain-tap-335747/">Pixabay.com</a></span></li><li><span class="primary">I Got A Fever - <a href="http://asylumactas.deviantart.com/art/More-Cowbell-194241861">AsylumActas on DeviantArt</a></span></li><li><span class="primary">More Cowbell GIF - <a href="http://gifsoup.com/view/4392785/more-cowbell.html">GIFSoup</a></span></li><li><span class="primary">Arrow in the Gold - <a href="https://openclipart.org/detail/20596/arrow-in-the-gold">OpenClipart</a></span></li><li><span class="primary">Rainbow Dash with Armor Commander Hurricane - <a href="http://pegasi-pony.deviantart.com/art/Raindow-Dash-with-Armor-Commander-Hurricane-Vector-274592028">Pegasi-pony on DeviantArt</a></span></li><li><span class="primary">Ugh As If - <a href="http://www.redbubble.com/people/pearl-paradise/works/13633522-ugh-as-if">RedBubble</a></span></li><li><span class="primary">Same and Different Ponies - <a href="http://www.mtv.com/news/2625537/my-little-pony-toy-review/">MTV</a></span></li><li><span class="primary">Epic Ponies - <a href="https://imgur.com/gallery/4QeW49x">Imgur - Bropez</a></span></li><li><span class="primary">Not Ready - <a href="https://derpibooru.org/1043076">Derpibooru.org</a></span></li><li><span class="primary">Headless pony - <a href="http://www.julianaheng.com/curing-tail-rust-in-my-little-pony/">Juliana&#8217;s Toy Collecting Tips</a></span></li><li><span class="primary">Agent Oso - <a href="http://disneyjunior.disney.com/special-agent-oso">Disney Junior</a></span></li></ul></section></article><script src="build/build.js"></script></body></html>
