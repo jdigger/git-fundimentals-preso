@@ -469,12 +469,12 @@ image::sourcetree_stage_lines.png[]
 --
 [source,bash,subs="verbatim,quotes"]
 ----
-$ git tag aTag
+$ *git tag aTag*
 
-$ cat .git/refs/tags/aTag
+$ *cat .git/refs/tags/aTag*
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 
-$ git cat-file -t e001241
+$ *git cat-file -t e001241*
 commit
 ----
 --
@@ -485,15 +485,15 @@ commit
 --
 [source,bash,subs="verbatim,quotes"]
 ----
-$ git tag -a annTag -m "annotated tag here"
+$ *git tag -a annTag -m "annotated tag here"*
 
-$ cat .git/refs/tags/annTag
+$ *cat .git/refs/tags/annTag*
 85aca4362a29ddb70a70c6d6f882d4c1e04b2eb3
 
-$ git cat-file -t 85aca43
+$ *git cat-file -t 85aca43*
 tag
 
-$ git cat-file -p 85aca43
+$ *git cat-file -p 85aca43*
 object e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 type commit
 tag annTag
@@ -509,7 +509,7 @@ annotated tag here
 --
 [source,bash,subs="verbatim,quotes"]
 ----
-$ cat .git/refs/heads/master
+$ *cat .git/refs/heads/master*
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 ----
 --
