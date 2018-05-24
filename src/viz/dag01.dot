@@ -15,7 +15,7 @@ digraph dag01 {
     }
     subgraph /* Commits */ {
         node [fillcolor=yellow];
-        "a8036eb";
+        "3b1b4ff";
     }
     subgraph /* Trees */ {
         node [fillcolor=chartreuse];
@@ -29,8 +29,8 @@ digraph dag01 {
     }
 
     HEAD -> master [label=<ref<BR/>refs/heads/master>]
-    master -> "a8036eb" [label=<commit<BR/>'First good version'> constraint=false];
-    "a8036eb" -> "0550b75" [label=<tree<BR/>/>];
+    master -> "3b1b4ff" [label=<commit<BR/>'First good version'> constraint=false];
+    "3b1b4ff" -> "0550b75" [label=<tree<BR/>/>];
     "0550b75" -> "cb63181" [label=<tree<BR/>morefiles>];
     "0550b75" -> "77bd771" [label=<blob<BR/>file1.txt>];
     "cb63181" -> "77bd771" [taillabel=<blob<BR/>file3.txt>];

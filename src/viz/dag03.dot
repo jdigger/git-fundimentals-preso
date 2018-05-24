@@ -15,7 +15,7 @@ digraph dag03 {
     subgraph /* Commits */ {
         node [fillcolor=yellow];
         rank=same;
-        "a8036eb";
+        "3b1b4ff";
         "7581387";
         "e001241";
     }
@@ -36,9 +36,9 @@ digraph dag03 {
     master -> "e001241" [label=<commit<BR/>'Renamed files'> constraint=false];
     subgraph /* "old" edges */ {
         edge [fontsize="9"];
-        "7581387" -> "a8036eb" [label=<parent>];
+        "7581387" -> "3b1b4ff" [label=<parent>];
         "7581387" -> "3666127" [label=<tree<BR/>/>];
-        "a8036eb" -> "0550b75" [label=<tree<BR/>/>];
+        "3b1b4ff" -> "0550b75" [label=<tree<BR/>/>];
         "0550b75" -> "77bd771" [label=<blob<BR/>file1.txt>];
         "0550b75" -> "cb63181" [label=<tree<BR/>morefiles>];
         "3666127" -> "cb63181" [label=<tree<BR/>morefiles>];
