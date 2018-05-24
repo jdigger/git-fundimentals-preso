@@ -208,29 +208,29 @@ $ <strong>find .git/objects -type f</strong>
 <section><h2>Manipulating the Index</h2><ul><li><span class="primary"><span class="source bash">git add file</span> and <span class="source bash">git rm file</span> - adds and removes files from the index</span></li><li><span class="primary"><span class="source bash">git add -p file</span> - add a &#8220;patch&#8221; from this file, allowing selection of specific pieces of the file and not the whole thing</span><ul><li><span class="primary">While this can be done at the command line, this is really something that a graphical tool like <a href="http://www.sourcetreeapp.com/">SourceTree</a> makes <strong><em>much</em></strong> easier</span></li></ul></li><li><span class="primary"><span class="source bash">git reset HEAD~1</span> - move the index to what it looked like before the last commit, but leave the files as they were (i.e., &#8220;forget&#8221; that <span class="source bash">git commit</span> happened)</span></li><li><span class="primary"><span class="source bash">git reset --hard HEAD</span> - move the index <strong>and</strong> filesystem to what it looked like at the last commit (very commonly done to toss away every that&#8217;s been done since the last commit because of a bad rabbit trail)</span></li></ul></section>
 <section><figure class="image"><img src="images/sourcetree_stage_lines.png" alt="sourcetree stage lines"></figure></section>
 <section><h2>References</h2></section>
-<section><h2>Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git tag aTag
+<section><h2>Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git tag aTag</strong>
 
-$ cat .git/refs/tags/aTag
+$ <strong>cat .git/refs/tags/aTag</strong>
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 
-$ git cat-file -t e001241
+$ <strong>git cat-file -t e001241</strong>
 commit</code></pre></div></section>
-<section><h2>Annotated Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ git tag -a annTag -m "annotated tag here"
+<section><h2>Annotated Tags</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>git tag -a annTag -m "annotated tag here"</strong>
 
-$ cat .git/refs/tags/annTag
+$ <strong>cat .git/refs/tags/annTag</strong>
 85aca4362a29ddb70a70c6d6f882d4c1e04b2eb3
 
-$ git cat-file -t 85aca43
+$ <strong>git cat-file -t 85aca43</strong>
 tag
 
-$ git cat-file -p 85aca43
+$ <strong>git cat-file -p 85aca43</strong>
 object e0012413fb1c0728dc1d9b86c9b074dfc24a220a
 type commit
 tag annTag
 tagger Git Fundamentals &lt;gitfund@git.com&gt; 1410039830 -0600
 
 annotated tag here</code></pre></div></section>
-<section><h2>Branches</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ cat .git/refs/heads/master
+<section><h2>Branches</h2><div class="generic-codeblock"><pre class="source"><code data-lang="bash" class="language-bash prettyprint">$ <strong>cat .git/refs/heads/master</strong>
 e0012413fb1c0728dc1d9b86c9b074dfc24a220a</code></pre></div>
 <p>The big difference between branches and tags is that the value in that file <strong><em>will change</em></strong> over time during a normal workflow. (i.e., As you make changes to the branch.)</p></section>
 <section><h2>Mutability</h2></section>
